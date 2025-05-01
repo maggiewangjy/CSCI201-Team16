@@ -1,6 +1,10 @@
+import NavBar from "../components/navBar.jsx";
+
 function Login(){
-    return<div>
-        <p>Hello World</p>
-    </div>
+    return (
+        <div>
+            <NavBar/>
+        </div>
+    );
 }
 export default Login

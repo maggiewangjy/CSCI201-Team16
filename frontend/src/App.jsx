@@ -1,11 +1,7 @@
 import react from 'react';
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
-import Login from "./pages/Login";
-
-function Logout() {
-  localStorage.clear();
-  return <Navigate to="/login"/>
-}
+import "./styles/app.css";
+import Login from "./pages/Login.jsx";
 
 function App() {
   return (

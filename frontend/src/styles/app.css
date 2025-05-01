@@ -1,0 +1,13 @@
+:root {
+    --lightRed: #FCC2C2;
+    --darkRed: #A31D1D;
+    --lightBeige: #FFFBEE;
+    --beige: #ECDCBF;
+}
+  
+body {
+    width: 100vw;
+    margin: 0;
+    background: var(--lightBeige);
+    font-family: Arial, san-serif;
+}
