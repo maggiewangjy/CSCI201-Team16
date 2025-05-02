@@ -1,3 +1,5 @@
+import java.sql.*;
+
 public class ParticipantsDatabaseUtil {
     public Member addMember(Member member) throws SQLException {
         String sql = "INSERT INTO participants (firstName, lastName, email) VALUES (?, ?, ?)";

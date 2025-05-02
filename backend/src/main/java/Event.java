@@ -56,7 +56,7 @@ public class Event {
         }
     }
 
-    public void addAttendee(User user) {
+    public void addAttendee(Member member) {
         String sql = "INSERT INTO Participants (userID, name, email, status, eventID) VALUES (?, ?, ?, 'confirmed', ?)";
         try (Connection conn = DatabaseConnectionUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -71,7 +71,7 @@ public class Event {
         }
     }
 
-    public void removeAttendee(User user) {
+    public void removeAttendee(Member member) {
         String sql = "DELETE FROM Participants WHERE eventID = ? AND userID = ?";
         try (Connection conn = DatabaseConnectionUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -134,7 +134,7 @@ public class Event {
                     rs.getString("name"),
                     rs.getString("email")
                 );
-                attendees.add(m);
+                attendees.add(u);
             }
         } catch (SQLException e) {
             e.printStackTrace();
