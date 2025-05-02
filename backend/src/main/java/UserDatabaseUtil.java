@@ -70,11 +70,12 @@ public class UserDatabaseUtil {
                 return true;
             }
             else{
-                rreturn false;
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 

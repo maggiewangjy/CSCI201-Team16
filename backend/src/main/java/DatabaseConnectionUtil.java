@@ -1,10 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 
 public class DatabaseConnectionUtil {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/CSCI201-Team16"; // edit based on your url path
