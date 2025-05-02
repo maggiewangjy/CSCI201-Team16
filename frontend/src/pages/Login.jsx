@@ -1,5 +1,4 @@
 import React from "react";
-//import NavBar from "../components/navBar.jsx";
 import LoginForm from "../components/loginForm.jsx";
 import SignUpCard from "../components/signUpCard.jsx";
 import ContinueAsGuest from "../components/continueAsGuest.jsx";
@@ -30,7 +29,7 @@ const Login = () => {
         
         <div className="login-content">
           <div className="login-card">
-            <h2 className="login-title">Club Leader Login</h2>
+            <h2 className="login-title">   Club Leader Login</h2>
             <LoginForm onSubmit={handleLogin} />
           </div>
           

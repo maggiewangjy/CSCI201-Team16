@@ -30,17 +30,17 @@
     align-items: center;
     justify-content: center;
   }
-  
-  /* Card styling for both login and signup */
-  .login-card, .signup-card {
-    background-color: #FFFBEE;
-    border-radius: 20px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 450px;
-    margin: 1rem auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  }
+
+
+ .login-card, .signup-card {
+  background-color: #FFFBEE;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 380px;
+  margin: 1rem auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
   
   .login-title, .signup-title {
     font-size: 2rem;
