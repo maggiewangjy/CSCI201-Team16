@@ -33,6 +33,12 @@
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   }
   
+  .security-question-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
   .signup-buttons {
     display: flex;
     justify-content: space-between;
