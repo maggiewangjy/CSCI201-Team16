@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-import NavBar from "../components/navBar.jsx";
-
-function Login(){
-    return (
-        <div>
-            <NavBar/>
-        </div>
-    );
-}
-export default Login
-=======
 import React from "react";
 import NavBar from "../components/navBar.jsx";
 import LoginForm from "../components/loginForm.jsx";
@@ -84,5 +72,3 @@ const Login = () => {
 };
 
 export default Login;
-
->>>>>>> origin/frontend

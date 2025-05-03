@@ -27,9 +27,10 @@ function Calendar({selectEventDate}) {
 		if (activeDate !== null && activeDate.id !== null) {
 			document.getElementById(activeDate.id).classList.remove("active");
 		}
-		if (currDate.getMonth() === actualDate.getMonth()){
-			selectEventDate(currDate.getDate());
-		}
+		// Need to fix this bug
+		// if (currDate.getMonth() === actualDate.getMonth()){
+		// 	selectEventDate(currDate.getDate());
+		// }
 		calendar();
 	}
 
