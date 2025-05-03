@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,18 +20,23 @@ public class Event {
         this.notes = notes;
         this.toDo = new ArrayList<>();
         this.attendees = new ArrayList<>();
-        loadToDos();
-        loadAttendees();
     }
 
-    public Event(LocalDate date, LocalTime time, String name, String notes) {
-        this(-1, date, time, name, notes);
-    }
-  
-    // Getters
     public int getEventID() { return eventID; }
     public LocalDate getDate() { return date; }
     public LocalTime getTime() { return time; }
     public String getName() { return name; }
     public String getNotes() { return notes; }
+
+    public List<String> getToDo() { return toDo; }
+    public List<User> getAttendees() { return attendees; }
+
+    public void setToDo(List<String> toDo) { this.toDo = toDo; }
+    public void setAttendees(List<User> attendees) { this.attendees = attendees; }
+
+    public void addToDo(String task) { this.toDo.add(task); }
+    public void removeToDo(String task) { this.toDo.remove(task); }
+
+    public void addAttendee(User user) { this.attendees.add(user); }
+    public void removeAttendee(User user) { this.attendees.remove(user); }
 }
