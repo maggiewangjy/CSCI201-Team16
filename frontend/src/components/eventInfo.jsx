@@ -1,89 +1,118 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import "../styles/eventInfo.css";
 
-function EventInfo(){
-    // useEffect(() => {
-    //     const fetchEvent = async() => {
-    //         try{
-    //             const response = await fetch('API-Endpoint');
-    //             if(!response.ok){
-    //                 throw new Error()
-    //             } 
-    //             const json = await response.json();
-    //         }
-    //         catch{
+function EventInfo({ selectedDate }) {
+    const [event, setEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    //         }
-    //     }
-    // })
-    
-    // const attendEvent = () => {
+    useEffect(() => {
+        // Check login state
+        setIsLoggedIn(localStorage.getItem("logged-in") === "true");
+        if (selectedDate) {
+            fetchEvents();
+        }
+    }, [selectedDate]);
 
-    // }
+    const fetchEvents = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch('http://localhost:8080/CSCI201-Team16/ListEventsServlets');
+            if (!response.ok) {
+                throw new Error('Failed to fetch events');
+            }
+            const events = await response.json();
+            
+            // Format the selected date to match the backend date format (YYYY-MM-DD)
+            const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+            
+            // Find the event for the selected date
+            const eventForDate = events.find(event => {
+                const eventDate = new Date(event.date).toISOString().split('T')[0];
+                return eventDate === formattedDate;
+            });
+            
+            setEvent(eventForDate || null);
+            setError(null);
+        } catch (err) {
+            setError(err.message);
+            setEvent(null);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    // const editEvent = () => {
+    const formatTime = (timeString) => {
+        if (!timeString) return '';
+        // Extract hours and minutes from the time string
+        const [hours, minutes] = timeString.split(':');
+        const hour = parseInt(hours);
+        const ampm = hour >= 12 ? 'pm' : 'am';
+        const formattedHour = hour % 12 || 12; // Convert 0 to 12 for 12am
+        return `${formattedHour}:${minutes}${ampm}`;
+    };
 
-    // }
+    const getOrdinalSuffix = (day) => {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    };
 
-    // const viewAttendance = () => {
+    const formatDate = (date) => {
+        const dateObj = new Date(date);
+        const month = dateObj.toLocaleString('default', { month: 'long' });
+        const day = dateObj.getDate();
+        const year = dateObj.getFullYear();
+        const suffix = getOrdinalSuffix(day);
+        return `${month} ${day}${suffix}, ${year}`;
+    };
 
-    // } 
+    if (!selectedDate) {
+        return null;
+    }
 
-    // if(localStorage.getItem("logged-in") !== "true"){
-    //     // const today = new Date();
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-    //     // const monthList = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
-    //     // const day = today.getDate().toString();
-    //     // const month = monthList[today.getMonth() + 1];
-    //     // const year = today.getFullYear().toString();
-
-    //     // const currentDate = `${month} ${day}, ${year}`;
-    //     // const queryDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-        
-
-    // }
-    // else{
-        return(
-            <div id="event">
-                <div id="calendar">
-                    <p>Calendar</p>
-                </div>
-                <div>
-                <h1 class="titles"><strong>April 16th, 2025</strong></h1>
-                <div id="event-card"> 
-                    <h1>Club Event #3</h1>
-                    <p>8:00am - 12:00pm</p>
-                    <br/>
-                    <h4 class="titles"><strong>Overview</strong></h4>
-                    <p>      
-                        Hey everyone! Just a reminder that our second club event is happening this Saturday from 
-                        8am to 12pm on McCarthy Quad. We’ll be hosting a community clean-up followed by a light 
-                        brunch and time to hang out with fellow members. All supplies will be provided—just bring 
-                        yourself and some good energy! Looking forward to seeing you all there and making a 
-                        positive impact together.
-                    </p>
-                    <h4 class="titles"><strong>Attendees</strong></h4>
-                    <ul>
-                        <li>Grace Shaha</li>
-                        <li>Maggie Wang</li>
-                        <li>Charlie Vega</li>
-                        <li>Grace Shaha</li>
-                        <li>Maggie Wang</li>
-                        <li>Charlie Vega</li>
-                        <li>Grace Shaha</li>
-                        <li>Maggie Wang</li>
-                        <li>Charlie Vega</li>
-                    </ul>
-                </div>
+    return (
+        <div id="event">
+            <div>
+                <h1 className="titles"><strong>{formatDate(selectedDate)}</strong></h1>
+                {event ? (
+                    <div id="event-card">
+                        <h1>{event.name}</h1>
+                        <p>{formatTime(event.time)}</p>
+                        <br/>
+                        <h4 className="titles"><strong>Overview</strong></h4>
+                        <p>{event.notes}</p>
+                        <h4 className="titles"><strong>Attendees</strong></h4>
+                        <ul>
+                            {/* TODO: Add attendees list when backend endpoint is available */}
+                            <li>Loading attendees...</li>
+                        </ul>
+                    </div>
+                ) : (
+                    <div id="event-card">
+                        <p>No events scheduled for this date.</p>
+                    </div>
+                )}
                 <div id="buttons">
-                    <button>Edit Event</button>
+                    {isLoggedIn && <button>Edit Event</button>}
                     <button>Attend</button>
                 </div>
-                </div>
             </div>
-        );
-    //}
+        </div>
+    );
 }
 
 export default EventInfo;
