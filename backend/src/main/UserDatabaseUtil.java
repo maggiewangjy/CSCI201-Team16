@@ -43,7 +43,7 @@ public class UserDatabaseUtil {
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(userID);
+                return rs.getInt("userID");
             }
             else{
                 return -1;
@@ -51,6 +51,7 @@ public class UserDatabaseUtil {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
     public static boolean updatePassword(String email, String newPassword, String securityAnswer1, String securityAnswer2) {
@@ -70,11 +71,12 @@ public class UserDatabaseUtil {
                 return true;
             }
             else{
-                rreturn false;
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 
