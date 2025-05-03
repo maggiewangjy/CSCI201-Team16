@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "../components/navBar.jsx";
 import LoginForm from "../components/loginForm.jsx";
 import SignUpCard from "../components/signUpCard.jsx";
 import ContinueAsGuest from "../components/continueAsGuest.jsx";
@@ -9,15 +8,13 @@ import "../styles/login.css";
 const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
-   
-  };
-
-  const handleContinueAsGuest = () => {
     
+  const handleContinueAsGuest = () => {
+    // Handle guest login logic here
   };
 
   const handleSignUp = () => {
-   
+    window.location.href = '/clubLeaderSignUp';
   };
 
   return (

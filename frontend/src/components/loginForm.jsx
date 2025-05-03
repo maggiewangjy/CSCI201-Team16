@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import "../styles/LoginForm.css";
+import "../styles/loginForm.css";
+
 
 
 const LoginForm = ({ onSubmit }) => {
