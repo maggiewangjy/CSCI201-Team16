@@ -14,7 +14,6 @@ CREATE TABLE Users (
 );
 
 -- Create Events table --
-CREATE TABLE Events (
     eventID INT PRIMARY KEY AUTO_INCREMENT,
     createdBy INT,
     name VARCHAR(255) NOT NULL,
@@ -48,4 +47,3 @@ CREATE TABLE Agenda (
     completion BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (eventID) REFERENCES Events(eventID)
 );
-
