@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import "../styles/LoginForm.css";
 
-
 const LoginForm = ({ onSubmit }) => {
     return (
       <form onSubmit={onSubmit} className="login-form">
