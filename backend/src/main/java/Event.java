@@ -28,8 +28,7 @@ public class Event {
     public Event(LocalDate date, LocalTime time, String name, String notes) {
         this(-1, date, time, name, notes);
     }
-
-
+  
     // Getters
     public int getEventID() { return eventID; }
     public LocalDate getDate() { return date; }
