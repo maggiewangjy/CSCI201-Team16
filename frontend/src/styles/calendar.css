@@ -1,0 +1,89 @@
+:root {
+    --lightRed: #FCC2C2;
+    --darkRed: #A31D1D;
+    --lightBeige: #FFFBEE;
+    --beige: #ECDCBF;
+}
+
+/* EDIT THE CSS TO MATCH THE FIGMA */
+#calendar-container {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    margin-right: 20px;
+    width: 950px;
+}
+
+#calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--darkRed);
+    padding: 5px;
+    padding: 0 10px;
+    margin-bottom: 30px;
+}
+
+#calendar-header-left{
+    display: flex;
+    align-items: center;
+}
+
+#month-year {
+    margin-left: 40px;
+    font-size: 40px;
+    color: white;
+}
+
+#calendar-header button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 50px;
+    cursor: pointer;
+}
+
+#calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 4px solid var(--darkRed);
+    border-bottom: none;
+    padding: 15px 0 5px 0;
+    background-color: white;
+}
+
+.calendar-day {
+    text-align: center;
+    padding: 5px;
+}
+
+#calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 4px solid var(--darkRed);
+    border-top: none;
+    padding: 0 5px 5px 5px;
+    background-color: white;
+}
+
+#calendar-dates .date{
+    background-color: var(--lightRed);
+    border: 3px solid var(--lightRed);
+    height: 100px;
+    margin: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#calendar-dates .date.active{
+    border: 3px solid var(--darkRed);
+}
+
+#calendar-dates .date.inactive{
+    background-color: var(--lightBeige);
+    border: 3px solid var(--beige);
+    cursor: default;
+}

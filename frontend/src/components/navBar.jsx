@@ -1,14 +1,25 @@
 import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import "../styles/navBar.css";
 import logo from "../images/logo.png";
 
-function NavBar(){
+function NavBar({onCreateEventClick}){
+	
+	const logIn = () => {
+		return <Navigate to="/login"/>
+	}
+	
 	const logOut = () => {
 		localStorage.clear();
 		return <Navigate to="/login"/>
 	}
 	
-	if (localStorage.getItem("logged-in") !== "true"){
+	const goToHome = () => {
+		return <Navigate to="/clubLeaderPage"/>
+	}
+
+	// REVERT THIS PART FROM === to !===
+	if (localStorage.getItem("logged-in") === "true"){
 		return (
 			<div id="header">
 				<div id="header-left">
@@ -16,7 +27,7 @@ function NavBar(){
 				</div> 
 				<h1 id="header-mid">CSCI 201 TEAM 16 CLUB</h1> 
 				<div id="header-right">
-					<button id="logOut-btn" onclick="logIn()">Log in</button>
+					<button id="logOut-btn" onClick={logIn}>Log in</button>
 				</div> 
 			</div>
 			);
@@ -25,12 +36,14 @@ function NavBar(){
 			<div id="header">
 				<div id="header-left">
 					<img src={logo} alt="Logo" width="50" height="50"/>
-					<button id="home-btn" onclick="goToHome()">Home</button>
-					<button id="create-btn" onclick="openEventComponent()">Create Event</button>
-					<button id="view-btn" onclick="goToParticipation()">View Participation</button>
+					<button id="home-btn" onClick={goToHome}>Home</button>
+					<button id="create-btn" onClick={onCreateEventClick}>Create Event</button>
+					<a href="#attendance-container">
+						<button id="view-btn">View Participation</button>
+					</a>
 				</div> 
 				<div id="header-right">
-					<button id="logOut-btn" onclick={logOut()}>Log Out</button>
+					<button id="logOut-btn" onClick={logOut}>Log Out</button>
 				</div> 
 			</div>
 			)
