@@ -1,9 +1,10 @@
 :root {
-    --lightRed: #A31D1D;
-    --darkRed: #932c24;
-    --lightBeige: #FFFBEE;
-    --beige: #ECDCBF;
-  }
+  --lightRed: #FCC2C2;
+  --darkRed: #A31D1D;
+  --lightBeige: #FFFBEE;
+  --beige: #ECDCBF;
+}
+
   
   .signup-form-container {
     width: 100%;

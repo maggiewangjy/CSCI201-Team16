@@ -1,54 +1,49 @@
 import { useEffect } from 'react';
 import "../styles/eventInfo.css";
 
-function EventInfo(){
-    // useEffect(() => {
-    //     const fetchEvent = async() => {
-    //         try{
-    //             const response = await fetch('API-Endpoint');
-    //             if(!response.ok){
-    //                 throw new Error()
-    //             } 
-    //             const json = await response.json();
-    //         }
-    //         catch{
+function EventInfo({SelectedEvent}){
+    useEffect(() => {
+        const fetchEvent = async() => {
+            try{
+                const response = await fetch('API-Endpoint');
+                if(!response.ok){
+                    throw new Error()
+                } 
+                const json = await response.json();
+            }
+            catch{
 
-    //         }
-    //     }
-    // })
+            }
+        }
+    })
     
-    // const attendEvent = () => {
+    const attendEvent = () => {
 
-    // }
+    }
 
-    // const editEvent = () => {
+    const editEvent = () => {
 
-    // }
+    }
 
-    // const viewAttendance = () => {
+    const viewAttendance = () => {
 
-    // } 
+    } 
 
-    // if(localStorage.getItem("logged-in") !== "true"){
-    //     // const today = new Date();
+    if(localStorage.getItem("logged-in") !== "true"){
+        const today = new Date();
 
-    //     // const monthList = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const monthList = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-    //     // const day = today.getDate().toString();
-    //     // const month = monthList[today.getMonth() + 1];
-    //     // const year = today.getFullYear().toString();
+        const day = today.getDate().toString();
+        const month = monthList[today.getMonth() + 1];
+        const year = today.getFullYear().toString();
 
-    //     // const currentDate = `${month} ${day}, ${year}`;
-    //     // const queryDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-        
-
-    // }
-    // else{
+        const currentDate = `${month} ${day}, ${year}`;
+        const queryDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+    }
+    else{
         return(
             <div id="event">
-                <div id="calendar">
-                    <p>Calendar</p>
-                </div>
                 <div>
                 <h1 class="titles"><strong>April 16th, 2025</strong></h1>
                 <div id="event-card"> 
@@ -83,7 +78,7 @@ function EventInfo(){
                 </div>
             </div>
         );
-    //}
+    }
 }
 
 export default EventInfo;

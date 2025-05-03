@@ -3,15 +3,9 @@ CREATE DATABASE ClubEventsDB;
 USE ClubEventsDB;
 -- Create Users table --
 CREATE TABLE Users (
-    userID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) PRIMARY NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'member') NOT NULL,
-    securityQuestion1 VARCHAR(255),
-    securityAnswer1 VARCHAR(255),
-    securityQuestion2 VARCHAR(255),
-    securityAnswer2 VARCHAR(255)
-);
+ );
 
 -- Create Events table --
 CREATE TABLE Events (
@@ -24,7 +18,7 @@ CREATE TABLE Events (
     agenda VARCHAR(255),
     notes VARCHAR(255),
     documents VARCHAR(255),
-    FOREIGN KEY (createdBy) REFERENCES Users(userID)
+    FOREIGN KEY (createdBy) REFERENCES Users(email)
 );
 
 -- Create Participants table --

@@ -1,31 +1,33 @@
 import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../components/navBar.jsx";
-import LoginForm from "../components/loginForm.jsx";
-import SignUpCard from "../components/signUpCard.jsx";
 import ContinueAsGuest from "../components/continueAsGuest.jsx";
 import logo from "../images/logoBackGroundRemoved.png";
 import "../styles/login.css";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const username = formData.get('username');
-    const password = formData.get('password');
-
+    
+    const URL = "http://localhost:8080/backend/";
     try {
-      const response = await fetch('/Login', {
+      const response = await fetch(`${URL}Login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
       });
-
       const data = await response.json();
+
       if (data.status === 'success') {
         localStorage.setItem("logged-in", "true");
         navigate("/clubLeaderPage");
@@ -39,17 +41,18 @@ const Login = () => {
   };
 
   const handleContinueAsGuest = () => {
-    localStorage.setItem("logged-in", "true");
-    navigate("/clubLeaderPage");
+    localStorage.clear();
+    localStorage.setItem("logged-in", "false");
+    navigate("/guestPage");
   };
 
   const handleSignUp = () => {
-    navigate("/signup");
+    navigate("/signUp");
   };
 
-  const handleForgotPassword = () => {
-    navigate("/forgot-password");
-  };
+  // const handleForgotPassword = () => {
+  //   navigate("/forgotPassword");
+  // };
 
   return (
     <div className="login-container">
@@ -64,10 +67,11 @@ const Login = () => {
             
             <form onSubmit={handleLogin} className="custom-login-form">
               <input
-                type="text"
-                placeholder="Username"
-                name="username"
+                type="email"
+                placeholder="Email"
+                name="email"
                 className="login-input"
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <input
@@ -75,12 +79,13 @@ const Login = () => {
                 placeholder="Password"
                 name="password"
                 className="login-input"
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <button type="submit" className="login-button">
                 Login
               </button>
-              <p className="forgot-password" onClick={handleForgotPassword}>Forgot Password?</p>
+              {/* <p className="forgot-password" onClick={handleForgotPassword}>Forgot Password?</p> */}
             </form>
           </div>
           

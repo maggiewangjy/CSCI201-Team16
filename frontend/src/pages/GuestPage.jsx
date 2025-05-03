@@ -4,8 +4,8 @@ import "../styles/clubLeaderPage.css";
 import CreateEvent from "../components/createEvent.jsx"
 import SelectedEvent from "../components/eventInfo.jsx"
 import { useState } from "react";
-import MemberAttendance from "../components/MemberAttendance.jsx";
-function ClubLeaderPage(){
+
+function GuestPage(){
     const currDate = new Date();
     const [showCreateEvent, setCreateEvent] = useState(false);
     const [selectedEventDate, setSelectedEventDate] = useState(currDate.getDate());
@@ -28,10 +28,9 @@ function ClubLeaderPage(){
        <div id="calendar-event-component">
             <Calendar selectEventDate={openSelectedDate} currDateSelected={selectedEventDate}/>
             {showCreateEvent && <CreateEvent/>}
-            {(selectedEventDate !== null) && <selectedEventDate eventDate={selectedEventDate}/>}
+            {(selectedEventDate !== null) && <SelectedEvent eventDate={selectedEventDate}/>}
        </div>
-       <MemberAttendance/>
     </div>
     )
 }
-export default ClubLeaderPage
+export default GuestPage;

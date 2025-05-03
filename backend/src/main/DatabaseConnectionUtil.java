@@ -3,9 +3,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnectionUtil {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/CSCI201-Team16"; // edit based on your url path
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB"; // edit based on your url path
     private static final String DB_USER = "root"; // your username
-    private static final String DB_PASSWORD = "root"; // your password
+    private static final String DB_PASSWORD = "charlievega05"; // your password
     
     static {
         try {

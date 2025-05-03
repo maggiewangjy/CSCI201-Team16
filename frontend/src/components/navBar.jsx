@@ -1,25 +1,25 @@
 import { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../styles/navBar.css";
 import logo from "../images/logo.png";
 
 function NavBar({onCreateEventClick}){
+	const navigate = useNavigate();
 	
 	const logIn = () => {
-		return <Navigate to="/login"/>
+		navigate("/login");
 	}
 	
 	const logOut = () => {
 		localStorage.clear();
-		return <Navigate to="/login"/>
+		navigate("/login");
 	}
 	
 	const goToHome = () => {
-		return <Navigate to="/clubLeaderPage"/>
+		navigate("/clubLeaderPage");
 	}
 
-	// REVERT THIS PART FROM === to !===
-	if (localStorage.getItem("logged-in") === "true"){
+	if (localStorage.getItem("logged-in") !== "true"){
 		return (
 			<div id="header">
 				<div id="header-left">

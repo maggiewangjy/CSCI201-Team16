@@ -30,16 +30,23 @@
 }
 
 #attendance-search {
+    display: flex;
+    flex-direction: row;
     border: 3px solid var(--beige);
     width: 89.5%;
     height: 3em;
     background-color: white;
     border: 3px solid var(--darkRed);
 }
+
 #search {
-    width: 89%;
     border: none;
     outline: none;
+}
+
+#searchButton{
+    width: 50px;
+    border: none;
 }
 
 #search::-webkit-search-cancel-button {

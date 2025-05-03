@@ -7,6 +7,7 @@ import UserVerification from "./components/UserVerification.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ClubLeaderSignUp from "./pages/ClubLeaderSignUp.jsx";
+import GuestPage from "./pages/guestPage.jsx";
 
 function App() {
   return (
@@ -14,8 +15,9 @@ function App() {
       <Routes>
         <Route path="/" element={ <Login/> }/>
         <Route path="/login" element={ <Login/> }/>
-        <Route path="/forgot-password" element={ <ForgotPassword/> }/>
-        <Route path="/signup" element={ <ClubLeaderSignUp/> }/>
+        <Route path="/forgotPassword" element={ <ForgotPassword/> }/>
+        <Route path="/signUp" element={ <ClubLeaderSignUp/> }/>
+        <Route path="/guestPage" element={ <GuestPage/> }/>
         <Route
           path="/clubLeaderPage"
           element={
