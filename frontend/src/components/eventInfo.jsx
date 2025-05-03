@@ -18,14 +18,25 @@ function EventInfo({ selectedDate }) {
     const fetchEvents = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/CSCI201-Team16/ListEventsServlets');
+            console.log('Attempting to fetch events from:', 'http://localhost:8080/CSCI201-Team16/ListEventsServlets');
+            const response = await fetch('http://localhost:8080/CSCI201-Team16/ListEventsServlets', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            
             if (!response.ok) {
-                throw new Error('Failed to fetch events');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
             const events = await response.json();
+            console.log('Fetched events:', events);
             
             // Format the selected date to match the backend date format (YYYY-MM-DD)
             const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+            console.log('Looking for events on date:', formattedDate);
             
             // Find the event for the selected date
             const eventForDate = events.find(event => {
@@ -33,10 +44,15 @@ function EventInfo({ selectedDate }) {
                 return eventDate === formattedDate;
             });
             
+            console.log('Found event:', eventForDate);
             setEvent(eventForDate || null);
             setError(null);
         } catch (err) {
-            setError(err.message);
+            console.error('Error fetching events:', err);
+            setError(`Connection Error: Could not connect to the backend server at http://localhost:8080. Please ensure:
+            1. The backend server is running
+            2. The server is running on port 8080
+            3. The application is deployed with context path 'CSCI201-Team16'`);
             setEvent(null);
         } finally {
             setLoading(false);
@@ -81,7 +97,7 @@ function EventInfo({ selectedDate }) {
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div className="error-message">{error}</div>;
     }
 
     return (

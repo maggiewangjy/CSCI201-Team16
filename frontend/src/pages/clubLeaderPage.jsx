@@ -10,8 +10,7 @@ import MemberAttendance from "../components/MemberAttendance.jsx";
 function ClubLeaderPage(){
     const currDate = new Date();
     const [showCreateEvent, setCreateEvent] = useState(false);
-    const [selectedEventDate, setSelectedEventDate] = useState(currDate.getDate());
-
+    const [selectedEventDate, setSelectedEventDate] = useState(currDate);
 
     const openCreateEvent = () => {
         console.log("openCreateEvent clicked");
@@ -21,16 +20,18 @@ function ClubLeaderPage(){
 
     const openSelectedDate = async (date) => {
         setCreateEvent(false);
-        setSelectedEventDate(date);
+        const newDate = new Date(currDate);
+        newDate.setDate(date);
+        setSelectedEventDate(newDate);
     }
 
     return (
     <div>
        <NavBar onCreateEventClick={openCreateEvent}/>
        <div id="calendar-event-component">
-            <Calendar selectEventDate={openSelectedDate} currDateSelected={selectedEventDate}/>
+            <Calendar selectEventDate={openSelectedDate} currDateSelected={selectedEventDate?.getDate()}/>
             {showCreateEvent && <p>Create Component</p>}
-            {(selectedEventDate !== null) && <p>Selected Component {selectedEventDate}</p>}
+            {selectedEventDate && <EventInfo selectedDate={selectedEventDate}/>}
             {/* {showCreateEvent && <CreateEvent/>}
             {(selectedEventDate !== null) && <selectedEventDate eventDate={selectedEventDate}/>} */}
        </div>
