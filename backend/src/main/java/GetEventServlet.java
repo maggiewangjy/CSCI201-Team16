@@ -41,7 +41,7 @@ public class GetEventServlet extends HttpServlet {
             int eventID = requestJson.get("eventID").getAsInt();
             
             // Assuming you have a method in a utility class to retrieve an Event by ID
-            Event event = EventDAO.getEventById(eventID);
+            Event event = EventDatase.getEventById(eventID);
             
             if (event != null) {
                 // Convert event details to JSON
