@@ -26,7 +26,7 @@ public class AttendancesDatabaseUtil {
         }
     }
 
-    public void registerMember(Member member) throws SQLException {
+    public void registerMember(User user) throws SQLException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
