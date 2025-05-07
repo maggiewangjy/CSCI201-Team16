@@ -11,7 +11,7 @@ public class Event {
     private String dateMonth;
    
 
-    public Event(int eventID, String name, String startTime, String endTime, String location, String agenda, String date, String dateMonth) {
+    public Event(int eventID, String name, Timestamp startTime, Timestamp endTime, String location, String agenda, String date, String dateMonth) {
         this.eventID = eventID;
         this.name = name;
         this.startTime = startTime;
@@ -19,7 +19,7 @@ public class Event {
         this.location = location;
         this.agenda = agenda;
         this.date = date;
-        this.datMonth = dateMonth;
+        this.dateMonth = dateMonth;
     }
 
     public int getEventID() { return eventID; }
@@ -28,4 +28,6 @@ public class Event {
     public java.sql.Timestamp getEndTime() { return endTime; }
     public String getLocation() { return location; }
     public String getAgenda() { return agenda; }
+    public String getDate() { return date; }
+    public String getDateMonth() { return dateMonth; }
 }
