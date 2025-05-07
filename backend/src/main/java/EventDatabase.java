@@ -2,6 +2,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Timestamp;
 
 public class EventDatabase {
 
@@ -12,12 +13,14 @@ public class EventDatabase {
     private static Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
+        } 
+        catch (ClassNotFoundException e) 
+        {
             throw new SQLException("MySQL JDBC Driver not found", e);
         }
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
-
+  
     private static void closeResources(ResultSet rs, Statement st, Connection conn) {
         try {
             if (rs != null) rs.close();
@@ -28,36 +31,39 @@ public class EventDatabase {
         }
     }
 
-    public static Event getEventByID(int eventID) {
+    public static List<Event> getEventByMonth(String month) {
+        List<Event> events = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Event event = null;
 
         try {
             conn = getConnection();
-            ps = conn.prepareStatement("SELECT * FROM Events WHERE eventID = ?");
-            ps.setInt(1, eventID);
+            ps = conn.prepareStatement("SELECT * FROM Events WHERE dateMonth = ?");
+            ps.setString(1, month);
             rs = ps.executeQuery();
 
-            if (rs.next()) {
-                event = new Event(
+            while (rs.next()) {
+                Event event = new Event(
                     rs.getInt("eventID"),
-                    rs.getDate("date").toLocalDate(),
-                    rs.getTime("time").toLocalTime(),
                     rs.getString("name"),
-                    rs.getString("notes")
-                );
-                loadToDos(event);
-                loadAttendees(event);
+                    rs.getTimestamp("startTime"),
+                    rs.getTimestamp("endTime"),
+                    rs.getString("location"),
+                    rs.getString("agenda"),
+                    rs.getString("date"),
+                    rs.getString("dateMonth")
+                )   ;
+                events.add(event);
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         } finally {
             closeResources(rs, ps, conn);
         }
 
-        return event;
+        return events;
     }
 
     public static List<Event> getEventsByDate(LocalDate date) {
@@ -75,13 +81,14 @@ public class EventDatabase {
             while (rs.next()) {
                 Event event = new Event(
                     rs.getInt("eventID"),
-                    rs.getDate("date").toLocalDate(),
-                    rs.getTime("time").toLocalTime(),
+                    rs.getString("date"),
+                    rs.getString("dateMonth"),
+                    rs.getTimestamp("startTime"),
+                    rs.getTimestamp("endTime"),
                     rs.getString("name"),
-                    rs.getString("notes")
+                    rs.getString("agenda"),
+                    rs.getString("location")
                 );
-                loadToDos(event);
-                loadAttendees(event);
                 events.add(event);
             }
         } catch (SQLException e) {
@@ -93,39 +100,6 @@ public class EventDatabase {
         return events;
     }
 
-    public static void addToDo(int eventID, String task) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-
-        try {
-            conn = getConnection();
-            ps = conn.prepareStatement("INSERT INTO Agenda (eventID, task, completion) VALUES (?, ?, false)");
-            ps.setInt(1, eventID);
-            ps.setString(2, task);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources(null, ps, conn);
-        }
-    }
-
-    public static void removeToDo(int eventID, String task) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-
-        try {
-            conn = getConnection();
-            ps = conn.prepareStatement("DELETE FROM Agenda WHERE eventID = ? AND task = ?");
-            ps.setInt(1, eventID);
-            ps.setString(2, task);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources(null, ps, conn);
-        }
-    }
 
     public static void addAttendee(int eventID, User user) {
         Connection conn = null;
@@ -133,28 +107,25 @@ public class EventDatabase {
 
         try {
             conn = getConnection();
-            ps = conn.prepareStatement("INSERT INTO Participants (userID, name, email, status, eventID) VALUES (?, ?, ?, 'confirmed', ?)");
-            ps.setInt(1, user.getUserID());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getEmail());
-            ps.setInt(4, eventID);
+            ps = conn.prepareStatement("INSERT INTO Attendance (name, email, eventID) VALUES (?, ?, ?)");
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setInt(3, eventID);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            closeResources(null, ps, conn);
+            closeResources(rs, ps, conn);
         }
-    }
 
-    public static void removeAttendee(int eventID, int userID) {
+    public static void removeAttendee(int eventID, String email) {
         Connection conn = null;
         PreparedStatement ps = null;
-
         try {
             conn = getConnection();
-            ps = conn.prepareStatement("DELETE FROM Participants WHERE eventID = ? AND userID = ?");
+            ps = conn.prepareStatement("DELETE FROM Attendance WHERE eventID = ? AND email = ?");
             ps.setInt(1, eventID);
-            ps.setInt(2, userID);
+            ps.setInt(2, email);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -163,70 +134,68 @@ public class EventDatabase {
         }
     }
 
-    public static void modifyNotes(int eventID, String newNotes) {
+    public boolean void deleteEvent(int eventID) 
+    {
         Connection conn = null;
         PreparedStatement ps = null;
 
-        try {
+        try 
+        {
             conn = getConnection();
-            ps = conn.prepareStatement("UPDATE Events SET notes = ? WHERE eventID = ?");
-            ps.setString(1, newNotes);
-            ps.setInt(2, eventID);
+            ps = conn.prepareStatement("DELETE FROM Events WHERE eventID = ?");
+            ps.setInt(1, eventID);
             ps.executeUpdate();
-        } catch (SQLException e) {
+            return true;
+        }
+        catch (SQLException e) 
+        {
             e.printStackTrace();
-        } finally {
+        }
+        finally 
+        {
             closeResources(null, ps, conn);
         }
+        return false;
     }
 
-    private static void loadToDos(Event event) {
+    public boolean void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
+    {
         Connection conn = null;
         PreparedStatement ps = null;
-        ResultSet rs = null;
 
-        try {
+        try 
+        {
             conn = getConnection();
-            ps = conn.prepareStatement("SELECT task FROM Agenda WHERE eventID = ?");
-            ps.setInt(1, event.getEventID());
-            rs = ps.executeQuery();
-
-            List<String> tasks = new ArrayList<>();
-            while (rs.next()) {
-                tasks.add(rs.getString("task"));
-            }
-            event.setToDo(tasks);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources(rs, ps, conn);
+            ps = conn.prepareStatement("UPDATE Events SET date = ?, startTime = ?, endTime = ?, location = ?, agenda = ? WHERE eventID = ?");
+            ps.setString(1, date);
+            ps.setTimestamp(2, startTime);
+            ps.setTimestamp(3, endTime);
+            ps.setString(4, location);
+            ps.setString(5, agenda);
+            ps.setInt(6, eventID);  
+            ps.executeUpdate();
+            return true;
         }
+        catch (SQLException e) 
+        {
+            e.printStackTrace();    
+        }
+        finally 
+        {
+            closeResources(null, ps, conn);
+        }
+        return false;
     }
 
-    private static void loadAttendees(Event event) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            conn = getConnection();
-            ps = conn.prepareStatement("SELECT userID, name, email FROM Participants WHERE eventID = ?");
-            ps.setInt(1, event.getEventID());
-            rs = ps.executeQuery();
-
-            List<User> users = new ArrayList<>();
-            while (rs.next()) {
-                users.add(new User(
-                    rs.getInt("userID"),
-                    rs.getString("name"),
-                    rs.getString("email")
-                ));
-            }
-            event.setAttendees(users);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources(rs, ps, conn);
-        }
+    public String displayDetails() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Event: ").append(name).append("\n")
+          .append("Date: ").append(date).append("\n")
+          .append("Start Time: ").append(startTime).append("\n")
+          .append("End Time: ").append(endTime).append("\n")
+          .append("Agenda: ").append(agenda).append("\n")
+        sb.append("Attendees:\n");
+        for (User m : attendees) sb.append("- ").append(m.getName()).append("\n"); // this needs to be changed with new attendance
+        return sb.toString();
     }
-}
+

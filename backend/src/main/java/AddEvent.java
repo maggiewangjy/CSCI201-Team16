@@ -1,14 +1,16 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 /**
  * Servlet implementation class AddEvent
  */
@@ -29,7 +31,30 @@ public class AddEvent extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+
+		response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Max-Age", "3600");
+
+		response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		PrintWriter out = response.getWriter();
+
+		Gson gson = new Gson();
+		JsonObject jsonResponse = new JsonObject();
+		try {
+			BufferedReader reader = request.getReader();
+			Event event = gson.fromJson(reader, Event.class);
+			EventDatabase.addEvent(event);
+			jsonResponse.addProperty("success", true);
+		} catch (Exception e) {
+			jsonResponse.addProperty("success", false);
+			jsonResponse.addProperty("error", e.getMessage());
+		}
+		out.print(jsonResponse.toString());
 	}
 
 	/**
@@ -40,50 +65,5 @@ public class AddEvent extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String name = request.getParameter("name");
-		String dateStr = request.getParameter("date");  
-		String timeStr = request.getParameter("time");   
-		String notes = request.getParameter("notes");
-
-		response.setContentType("application/json");
-		PrintWriter out = response.getWriter();
-
-		if (name == null || dateStr == null || timeStr == null || notes == null ||
-			name.isEmpty() || dateStr.isEmpty() || timeStr.isEmpty()) {
-			out.println("{\"status\":\"error\",\"message\":\"Missing required fields\"}");
-			return;
-		}
-
-		try {
-			LocalDate date = LocalDate.parse(dateStr);
-			LocalTime time = LocalTime.parse(timeStr);
-
-			String sql = "INSERT INTO Events (name, date, time, notes) VALUES (?, ?, ?, ?)";
-			try (Connection conn = DatabaseConnectionUtil.getConnection();
-				 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-				stmt.setString(1, name);
-				stmt.setDate(2, Date.valueOf(date));
-				stmt.setTime(3, Time.valueOf(time));
-				stmt.setString(4, notes);
-
-				int affectedRows = stmt.executeUpdate();
-				if (affectedRows == 0) {
-					out.println("{\"status\":\"error\",\"message\":\"Event insertion failed\"}");
-					return;
-				}
-
-				ResultSet rs = stmt.getGeneratedKeys();
-				if (rs.next()) {
-					int eventId = rs.getInt(1);
-					out.println("{\"status\":\"success\",\"eventID\":" + eventId + ",\"message\":\"Event added\"}");
-				} else {
-					out.println("{\"status\":\"error\",\"message\":\"No event ID generated\"}");
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			out.println("{\"status\":\"error\",\"message\":\"Server error occurred\"}");
-		}
 	}
 }

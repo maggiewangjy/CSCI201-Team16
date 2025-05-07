@@ -1,42 +1,31 @@
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 
 public class Event {
     private int eventID;
-    private LocalDate date;
-    private LocalTime time;
     private String name;
-    private String notes;
-    private List<String> toDo;
-    private List<User> attendees;
+    private java.sql.Timestamp startTime;
+    private java.sql.Timestamp endTime;
+    private String location;
+    private String agenda;
+    private String date;
+    private String dateMonth;
+   
 
-    public Event(int eventID, LocalDate date, LocalTime time, String name, String notes) {
+    public Event(int eventID, String name, String startTime, String endTime, String location, String agenda, String date, String dateMonth) {
         this.eventID = eventID;
-        this.date = date;
-        this.time = time;
         this.name = name;
-        this.notes = notes;
-        this.toDo = new ArrayList<>();
-        this.attendees = new ArrayList<>();
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.location = location;
+        this.agenda = agenda;
+        this.date = date;
+        this.datMonth = dateMonth;
     }
 
     public int getEventID() { return eventID; }
-    public LocalDate getDate() { return date; }
-    public LocalTime getTime() { return time; }
     public String getName() { return name; }
-    public String getNotes() { return notes; }
-
-    public List<String> getToDo() { return toDo; }
-    public List<User> getAttendees() { return attendees; }
-
-    public void setToDo(List<String> toDo) { this.toDo = toDo; }
-    public void setAttendees(List<User> attendees) { this.attendees = attendees; }
-
-    public void addToDo(String task) { this.toDo.add(task); }
-    public void removeToDo(String task) { this.toDo.remove(task); }
-
-    public void addAttendee(User user) { this.attendees.add(user); }
-    public void removeAttendee(User user) { this.attendees.remove(user); }
+    public java.sql.Timestamp getStartTime() { return startTime; }
+    public java.sql.Timestamp getEndTime() { return endTime; }
+    public String getLocation() { return location; }
+    public String getAgenda() { return agenda; }
 }
