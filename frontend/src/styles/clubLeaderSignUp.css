@@ -1,0 +1,49 @@
+.signup-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Left side containing logo and signup form */
+  .signup-left {
+    flex: 2;
+    background-color: #FFFBEE; /* Beige background */
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+  }
+  
+  /* Logo styling */
+  .logo-container {
+    margin-bottom: 1rem;
+  }
+  
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+  
+  /* Signup form card styling */
+  .signup-form-card {
+    background-color: #FFFBEE; /* Same as background for a subtle card effect */
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  /* Guest section (right side) styling */
+  .guest-section {
+    flex: 1;
+    background-color: #932c24; /* Dark red background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Center the guest content vertically */
+  .guest-content {
+    width: 100%;
+  }

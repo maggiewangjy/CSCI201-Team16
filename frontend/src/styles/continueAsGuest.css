@@ -1,0 +1,47 @@
+:root {
+    --darkRed: #932c24;
+    --lightCream: #fff6e6;
+  }
+  
+  .guest-container {
+    flex: 1;
+    background-color: var(--darkRed);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .guest-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+  }
+  
+  .guest-button {
+    background-color: var(--lightCream);
+    color: var(--darkRed);
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .guest-button:hover {
+    background-color: #fcefdc;
+  }
+  
+  .guest-arrow {
+    font-size: 1.25rem;
+  }
+  
