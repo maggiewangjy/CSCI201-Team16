@@ -1,53 +1,23 @@
 public class User {
-    private int userID;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String email;
+    private String password;
 
-    public User(int userID, String firstName, String lastName, String email) {
-        this.userID = userID;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String name, String email, String password) {
+        this.name = name;
         this.email = email;
+        this.password = password;
     }
 
-    public User(int userID, String name, String email) {
-        this.userID = userID;
-        String[] parts = name.split(" ", 2);
-        this.firstName = parts.length > 0 ? parts[0] : "";
-        this.lastName = parts.length > 1 ? parts[1] : "";
-        this.email = email;
-    }
-
-    public int getUserID() {
-        return userID;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName() {
-        return firstName + " " + lastName;
+    public String getPassword() {
+        return password;
     }
 }
