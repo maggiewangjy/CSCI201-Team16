@@ -7,7 +7,7 @@ public class AttendancesDatabaseUtil {
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "root";
 
-    private static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -16,7 +16,7 @@ public class AttendancesDatabaseUtil {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
 
-    private static void closeResources(ResultSet rs, Statement st, Connection conn) {
+    public static void closeResources(ResultSet rs, Statement st, Connection conn) {
         try {
             if (rs != null) rs.close();
             if (st != null) st.close();
