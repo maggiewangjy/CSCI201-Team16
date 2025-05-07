@@ -4,57 +4,49 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 
-/**
- * Servlet implementation class LoginServlet
- */
-@WebServlet("/LoginServlet")
+@WebServlet("/Login")
 public class LoginServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public LoginServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        //Response will have HTTP status and json status
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        
+        // Empty fields
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"status\":\"fail\", \"message\":\"Email and password are required.\", \"data\": null}");
+            return;
+        }
+
+        try {
+            int userID = UserDatabaseUtil.getUser(email, password);
+            
+            // userID found and successful login
+            if (userID != -1) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                String json = String.format(
+                    "{\"status\":\"success\", \"message\":\"Login successful.\", \"data\": {\"userID\": %d}}",
+                    userID
+                );
+                response.getWriter().write(json);
+            // One or both of email and password do not match and fail log in
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("{\"status\":\"error\", \"message\":\"Invalid email or password.\", \"data\": null}");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"status\":\"error\", \"message\":\"Server error during login.\", \"data\": null}");
+        }
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-
-		response.setContentType("application/json");
-		PrintWriter out = response.getWriter();
-
-		if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-			out.println("{\"status\":\"error\",\"message\":\"Missing email or password\"}");
-			return;
-		}
-
-		try {
-			int userId = UserDatabaseUtil.getUser(email, password);
-			if (userId != -1) {
-				out.println("{\"status\":\"success\",\"message\":\"Login successful\", \"userID\":" + userId + "}");
-			} else {
-				out.println("{\"status\":\"error\",\"message\":\"Invalid credentials\"}");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			out.println("{\"status\":\"error\",\"message\":\"Server error\"}");
-		}
-	}
 }
