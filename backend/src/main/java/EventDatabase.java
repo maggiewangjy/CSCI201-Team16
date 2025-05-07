@@ -2,6 +2,9 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.transform.Result;
+
 import java.sql.Timestamp;
 
 public class EventDatabase {
@@ -81,13 +84,13 @@ public class EventDatabase {
             while (rs.next()) {
                 Event event = new Event(
                     rs.getInt("eventID"),
-                    rs.getString("date"),
-                    rs.getString("dateMonth"),
+                    rs.getString("name"),
                     rs.getTimestamp("startTime"),
                     rs.getTimestamp("endTime"),
-                    rs.getString("name"),
                     rs.getString("agenda"),
-                    rs.getString("location")
+                    rs.getString("location"),
+                    rs.getString("date"),
+                    rs.getString("dateMonth")
                 );
                 events.add(event);
             }
@@ -104,6 +107,7 @@ public class EventDatabase {
     public static void addAttendee(int eventID, User user) {
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
             conn = getConnection();
@@ -118,7 +122,7 @@ public class EventDatabase {
             closeResources(rs, ps, conn);
         }
 
-    public static void removeAttendee(int eventID, String email) {
+    public static void removeAttendee (int eventID, String email) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -134,7 +138,7 @@ public class EventDatabase {
         }
     }
 
-    public boolean void deleteEvent(int eventID) 
+    public void deleteEvent(int eventID) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -145,7 +149,6 @@ public class EventDatabase {
             ps = conn.prepareStatement("DELETE FROM Events WHERE eventID = ?");
             ps.setInt(1, eventID);
             ps.executeUpdate();
-            return true;
         }
         catch (SQLException e) 
         {
@@ -155,10 +158,9 @@ public class EventDatabase {
         {
             closeResources(null, ps, conn);
         }
-        return false;
     }
 
-    public boolean void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
+    public void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -174,7 +176,6 @@ public class EventDatabase {
             ps.setString(5, agenda);
             ps.setInt(6, eventID);  
             ps.executeUpdate();
-            return true;
         }
         catch (SQLException e) 
         {
@@ -184,7 +185,6 @@ public class EventDatabase {
         {
             closeResources(null, ps, conn);
         }
-        return false;
     }
 
     public String displayDetails() {
@@ -198,4 +198,4 @@ public class EventDatabase {
         for (User m : attendees) sb.append("- ").append(m.getName()).append("\n"); // this needs to be changed with new attendance
         return sb.toString();
     }
-
+}}
