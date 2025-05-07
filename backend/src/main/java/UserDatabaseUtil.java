@@ -18,16 +18,13 @@ public class UserDatabaseUtil {
         
     }
 
-    public static void insertUser(String email, String password, String securityQuestion1, String securityAnswer1, String securityQuestion2, String securityAnswer2) {
-        String sql = "INSERT INTO users (email, password, securityQuestion1, securityAnswer1, securityQuestion2, securityAnswer2) VALUES (?, ?, ?, ?, ?, ?)";
+    public static void insertUser(String name, String email, String password) {
+        String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, email);
-            pstmt.setString(2, password);
-            pstmt.setString(3, securityQuestion1);
-            pstmt.setString(4, securityAnswer1);
-            pstmt.setString(5, securityQuestion2);
-            pstmt.setString(6, securityAnswer2);
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setString(3, password);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -52,33 +49,5 @@ public class UserDatabaseUtil {
         }
         return -1;
     }
-
-    public static boolean updatePassword(String email, String newPassword, String securityAnswer1, String securityAnswer2) {
-        String sql = "SELECT * FROM users WHERE email = ? AND securityAnswer1 = ? AND securityAnswer2 = ?";
-        try (Connection conn = getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, email);
-            pstmt.setString(2, securityAnswer1);
-            pstmt.setString(3, securityAnswer2);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                sql = "UPDATE users SET password = ? WHERE email = ?";
-                PreparedStatement pstmt2 = conn.prepareStatement(sql);
-                pstmt2.setString(1, newPassword);
-                pstmt2.setString(2, email);
-                pstmt2.executeUpdate();
-                return true;
-            }
-            else{
-                return false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
-
 }
     
