@@ -7,12 +7,15 @@ import { useState } from "react";
 import MemberAttendance from "../components/MemberAttendance.jsx";
 function ClubLeaderPage(){
     const currDate = new Date();
+    const mm = String(currDate.getMonth() + 1).padStart(2, '0');
+	const dd = String(currDate.getDate()).padStart(2, '0');
+	const yyyy = currDate.getFullYear();
+	const mmddyyyy = `${mm}${dd}${yyyy}`;
     const [showCreateEvent, setCreateEvent] = useState(false);
-    const [selectedEventDate, setSelectedEventDate] = useState(currDate.getDate());
+    const [selectedEventDate, setSelectedEventDate] = useState(mmddyyyy);
 
 
     const openCreateEvent = () => {
-        console.log("openCreateEvent cicked");
         setSelectedEventDate(null);
         setCreateEvent(true);
     }
@@ -20,6 +23,7 @@ function ClubLeaderPage(){
     const openSelectedDate = async (date) => {
         setCreateEvent(false);
         setSelectedEventDate(date);
+        
     }
 
     return (

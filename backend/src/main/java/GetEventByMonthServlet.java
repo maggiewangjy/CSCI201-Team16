@@ -14,7 +14,10 @@ public class GetEventByMonthServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+        
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
@@ -49,4 +52,13 @@ public class GetEventByMonthServlet extends HttpServlet {
             response.getWriter().write("{\"status\":\"error\", \"message\":\"Server error.\", \"data\": null}");
         }
     }
+
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
 }

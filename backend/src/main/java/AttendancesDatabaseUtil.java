@@ -3,7 +3,7 @@ import java.sql.*;
 public class AttendancesDatabaseUtil {
 
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/CSCI201-Team16";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "root";
 
