@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,13 +23,7 @@ public class GetAttendeesListServlet extends HttpServlet {
 
         String eventID = request.getParameter("eventID");
 
-        if (eventID == null || eventID.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"status\":\"fail\", \"message\":\"eventID is required.\", \"data\": null}");
-            return;
-        }
-
-        ArrayList<String> attendeeNames = new ArrayList<>();
+        List<String> attendeeNames = new ArrayList<>();
         
         try (Connection conn = AttendancesDatabaseUtil.getConnection()) {
             String sql = "SELECT u.name FROM Attendance a JOIN users u ON a.email = u.email WHERE a.eventID = ?";
@@ -60,7 +55,7 @@ public class GetAttendeesListServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"status\":\"error\", \"message\":\"Server error.\", \"data\": null}");
+            response.getWriter().write("{\"status\":\"failed\", \"message\":\"Server error.\", \"data\": null}");
         }
     }
 }
