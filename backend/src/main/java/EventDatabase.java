@@ -130,7 +130,7 @@ public class EventDatabase {
             conn = getConnection();
             ps = conn.prepareStatement("DELETE FROM Attendance WHERE eventID = ? AND email = ?");
             ps.setInt(1, eventID);
-            ps.setInt(2, email);
+            ps.setString(2, email);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,17 +186,5 @@ public class EventDatabase {
         {
             closeResources(null, ps, conn);
         }
-    }
-
-    public String displayDetails() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Event: ").append(name).append("\n")
-          .append("Date: ").append(date).append("\n")
-          .append("Start Time: ").append(startTime).append("\n")
-          .append("End Time: ").append(endTime).append("\n")
-          .append("Agenda: ").append(agenda).append("\n")
-        sb.append("Attendees:\n");
-        for (User m : attendees) sb.append("- ").append(m.getName()).append("\n"); // this needs to be changed with new attendance
-        return sb.toString();
     }
 }

@@ -1,6 +1,4 @@
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +11,8 @@ public class Calendar {
     }
 
     public void addEvent(Event event) {
-        String sql = "INSERT INTO Events (name, startTime, endTime, location, agenda, date, dateMonth, createdBy) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, 1)";
+        String sql = "INSERT INTO Events (name, startTime, endTime, location, agenda, date, dateMonth) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = UserDatabaseUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -24,9 +22,8 @@ public class Calendar {
             ps.setTimestamp(3, event.getEndTime());
             ps.setString(4, event.getLocation());
             ps.setString(5, event.getAgenda());
-            ps.setString(6, event.getDate());
-            ps.setString(7, event.getDateMonth());
-
+            ps.setString(6, event.getDate());       // MMDDYYYY (already formatted)
+            ps.setString(7, event.getDateMonth());  // MMyyyy (already formatted)
             ps.executeUpdate();
 
             ResultSet keys = ps.getGeneratedKeys();
@@ -50,8 +47,6 @@ public class Calendar {
         }
     }
 
-
-
     public void removeEvent(Event event) {
         String sql = "DELETE FROM Events WHERE eventID = ?";
         try (Connection conn = UserDatabaseUtil.getConnection();
@@ -69,20 +64,25 @@ public class Calendar {
     }
 
     private void loadEventsFromDB() {
-        String sql = "SELECT eventID, name, startTime, notes FROM Events";
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
+        String sql = "SELECT eventID, name, startTime, endTime, location, agenda, date, dateMonth FROM Events";
+        try (Connection conn = UserDatabaseUtil.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                int id = rs.getInt("eventID");
-                String name = rs.getString("name");
-                LocalDate date = rs.getTimestamp("startTime").toLocalDateTime().toLocalDate();
-                LocalTime time = rs.getTimestamp("startTime").toLocalDateTime().toLocalTime();
-                String notes = rs.getString("notes");
 
-                Event event = new Event(id, date, time, name, notes);
+            while (rs.next()) {
+                Event event = new Event(
+                    rs.getInt("eventID"),
+                    rs.getString("name"),
+                    rs.getTimestamp("startTime"),
+                    rs.getTimestamp("endTime"),
+                    rs.getString("location"),
+                    rs.getString("agenda"),
+                    rs.getString("date"),
+                    rs.getString("dateMonth")
+                );
                 events.add(event);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

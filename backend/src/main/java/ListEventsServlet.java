@@ -25,11 +25,11 @@ public class ListEventsServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json; charset=UTF-8");
 
-        String sql = "SELECT EventID, EventName, Date, StartTime, EndTime, Location, Agenda "
-                   + "FROM Event "
-                   + "ORDER BY Date, StartTime";
+        String sql = "SELECT eventID, name, date, startTime, endTime, location, agenda\n"
+        			+ "FROM Events"
+        			+ "ORDER BY Date, StartTime";
 
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
+        try (Connection conn = UserDatabaseUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery();
              PrintWriter out = response.getWriter()) {

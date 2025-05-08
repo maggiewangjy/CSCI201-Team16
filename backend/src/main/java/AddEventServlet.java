@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.servlet.ServletException;
@@ -21,29 +23,39 @@ public class AddEventServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         String name = request.getParameter("name");
-        String dateTime = request.getParameter("datetime");  
+        String dateStr = request.getParameter("date");      
+        String startStr = request.getParameter("start");    
+        String endStr = request.getParameter("end");       
         String location = request.getParameter("location");
         String agenda = request.getParameter("agenda");
 
-        if (name == null || dateTime == null || location == null || agenda == null ||
-            name.isEmpty() || dateTime.isEmpty() || location.isEmpty() || agenda.isEmpty()) {
+        if (name == null || dateStr == null || startStr == null || endStr == null ||
+            location == null || agenda == null ||
+            name.isEmpty() || dateStr.isEmpty() || startStr.isEmpty() || endStr.isEmpty() ||
+            location.isEmpty() || agenda.isEmpty()) {
+
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("{\"status\":\"fail\", \"message\":\"All fields are required.\"}");
             return;
         }
 
         try {
-            // Parse datetime and calculate end time
-            LocalDateTime start = LocalDateTime.parse(dateTime); 
-            LocalDateTime end = start.plusHours(1);
+            // Combine date and times into LocalDateTime
+            LocalDate date = LocalDate.parse(dateStr);
+            LocalTime startTime = LocalTime.parse(startStr);
+            LocalTime endTime = LocalTime.parse(endStr);
+
+            LocalDateTime start = LocalDateTime.of(date, startTime);
+            LocalDateTime end = LocalDateTime.of(date, endTime);
+
             Timestamp startTs = Timestamp.valueOf(start);
             Timestamp endTs = Timestamp.valueOf(end);
 
-            // Format date/month strings
-            String date = start.format(DateTimeFormatter.ofPattern("MMddyyyy"));
-            String dateMonth = start.format(DateTimeFormatter.ofPattern("MMyyyy"));
+            // Format MMDDYYYY and MMyyyy for DB
+            String dateFormatted = date.format(DateTimeFormatter.ofPattern("MMddyyyy"));
+            String dateMonth = date.format(DateTimeFormatter.ofPattern("MMyyyy"));
 
-            Event event = new Event(0, name, startTs, endTs, location, agenda, date, dateMonth);
+            Event event = new Event(0, name, startTs, endTs, location, agenda, dateFormatted, dateMonth);
             calendar.addEvent(event);
 
             response.setStatus(HttpServletResponse.SC_OK);

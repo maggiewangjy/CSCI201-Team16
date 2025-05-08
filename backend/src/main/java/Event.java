@@ -1,4 +1,5 @@
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class Event {
     private int eventID;
@@ -9,7 +10,6 @@ public class Event {
     private String agenda;
     private String date;
     private String dateMonth;
-   
 
     public Event(int eventID, String name, Timestamp startTime, Timestamp endTime, String location, String agenda, String date, String dateMonth) {
         this.eventID = eventID;
@@ -30,4 +30,17 @@ public class Event {
     public String getAgenda() { return agenda; }
     public String getDate() { return date; }
     public String getDateMonth() { return dateMonth; }
+    
+    public String displayDetails() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Event ID: ").append(eventID).append("\n")
+          .append("Name: ").append(name).append("\n")
+          .append("Date (MMDDYYYY): ").append(date).append("\n")
+          .append("Start Time: ").append(timeFormat.format(startTime)).append("\n")
+          .append("End Time: ").append(timeFormat.format(endTime)).append("\n")
+          .append("Location: ").append(location).append("\n")
+          .append("Agenda: ").append(agenda);
+        return sb.toString();
+    }
 }
