@@ -15,7 +15,7 @@ CREATE TABLE Events (
     startTime DATETIME NOT NULL,
     endTime DATETIME NOT NULL,
     location VARCHAR(255),
-    agenda VARCHAR(255),
+    agenda TEXT,
     date VARCHAR(255) NOT NULL,
     dateMonth VARCHAR(255) NOT NULL
 );
