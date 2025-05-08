@@ -1,48 +1,55 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-@WebServlet("/GetEventsByDateServlet")
-public class GetEventsByDateServlet extends HttpServlet {
-    public GetEventsByDateServlet() {
-        super();
-    }
+@WebServlet("/GetEventByDate")
+public class GetEventByDateServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy");
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        
+        // Pass in MMDDYYYY
+        String dateParam = request.getParameter("date"); 
 
-        PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
-        JsonObject responseJson = new JsonObject();
+        try {
+            LocalDate date = LocalDate.parse(dateParam, formatter);
+            List<Event> events = EventDatabase.getEventsByDate(date);
 
-        try 
-        {
-            BufferedReader reader = request.getReader();
-            String date = gson.fromJson(reader, String.class);
+            // Query returns no events for specific date
+            if (events.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write("{\"status\":\"success\", \"message\":\"No events found.\", \"data\": []}");
+                return;
+            }
 
-            ArrayList<Event> events = EventDatabase.getEventsByDate(date);
+            String eventsJson = new Gson().toJson(events);
+            String jsonResponse = String.format(
+                "{\"status\":\"success\", \"message\":\"Events retrieved.\", \"data\": %s}",
+                eventsJson
+            );
             
-            String json = gson.toJson(events);
-            responseJson.add("events", gson.toJsonTree(events));
-            out.println(json);
-            
-        }
-        catch (SQLException e) {
-            responseJson.addProperty("error", "Failed to fetch events: " + e.getMessage());
-            out.println(gson.toJson(responseJson));
+            // Send list of events for that day back to front-end
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(jsonResponse);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"status\":\"error\", \"message\":\"Server error.\", \"data\": null}");
         }
     }
 }

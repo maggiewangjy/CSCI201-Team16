@@ -13,22 +13,36 @@ public class Calendar {
     }
 
     public void addEvent(Event event) {
-        String sql = "INSERT INTO Events (name, startTime, endTime, location, agenda, notes, createdBy) VALUES (?, ?, ?, '', '', ?, 1)";
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
+        String sql = "INSERT INTO Events (name, startTime, endTime, location, agenda, date, dateMonth, createdBy) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, 1)";
+
+        try (Connection conn = UserDatabaseUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             ps.setString(1, event.getName());
-            Timestamp start = Timestamp.valueOf(event.getDate().atTime(event.getTime()));
-            Timestamp end = Timestamp.valueOf(event.getDate().atTime(event.getTime().plusHours(1)));
-            ps.setTimestamp(2, start);
-            ps.setTimestamp(3, end);
-            ps.setString(4, event.getNotes());
+            ps.setTimestamp(2, event.getStartTime());
+            ps.setTimestamp(3, event.getEndTime());
+            ps.setString(4, event.getLocation());
+            ps.setString(5, event.getAgenda());
+            ps.setString(6, event.getDate());
+            ps.setString(7, event.getDateMonth());
+
             ps.executeUpdate();
 
             ResultSet keys = ps.getGeneratedKeys();
             if (keys.next()) {
                 int newID = keys.getInt(1);
-                Event dbEvent = new Event(newID, event.getDate(), event.getTime(), event.getName(), event.getNotes());
-                events.add(dbEvent);
+                Event newEvent = new Event(
+                    newID,
+                    event.getName(),
+                    event.getStartTime(),
+                    event.getEndTime(),
+                    event.getLocation(),
+                    event.getAgenda(),
+                    event.getDate(),
+                    event.getDateMonth()
+                );
+                events.add(newEvent);
             }
 
         } catch (SQLException e) {
@@ -36,9 +50,11 @@ public class Calendar {
         }
     }
 
+
+
     public void removeEvent(Event event) {
         String sql = "DELETE FROM Events WHERE eventID = ?";
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
+        try (Connection conn = UserDatabaseUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, event.getEventID());
             ps.executeUpdate();

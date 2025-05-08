@@ -30,7 +30,7 @@ public class GetAttendanceByMemberServlet extends HttpServlet {
         int userAttendance = 0;
         int totalEvents = 0;
 
-        try (Connection conn = UserDatabaseUtil.getConnection()) {
+        try (Connection conn = AttendancesDatabaseUtil.getConnection()) {
             // Count attendance for this email
             PreparedStatement attendanceStmt = conn.prepareStatement("SELECT COUNT(*) AS count FROM Attendance WHERE email = ?");
             attendanceStmt.setString(1, email);

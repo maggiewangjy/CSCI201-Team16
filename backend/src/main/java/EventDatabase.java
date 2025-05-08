@@ -13,7 +13,7 @@ public class EventDatabase {
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "root";
 
-    private static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } 
@@ -24,7 +24,7 @@ public class EventDatabase {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
   
-    private static void closeResources(ResultSet rs, Statement st, Connection conn) {
+    public static void closeResources(ResultSet rs, Statement st, Connection conn) {
         try {
             if (rs != null) rs.close();
             if (st != null) st.close();
@@ -121,8 +121,9 @@ public class EventDatabase {
         } finally {
             closeResources(rs, ps, conn);
         }
+    }
 
-    public static void removeAttendee (int eventID, String email) {
+    public static void removeAttendee(int eventID, String email) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -138,7 +139,7 @@ public class EventDatabase {
         }
     }
 
-    public void deleteEvent(int eventID) 
+    public static void deleteEvent(int eventID) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -160,7 +161,7 @@ public class EventDatabase {
         }
     }
 
-    public void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
+    public static void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -198,4 +199,4 @@ public class EventDatabase {
         for (User m : attendees) sb.append("- ").append(m.getName()).append("\n"); // this needs to be changed with new attendance
         return sb.toString();
     }
-}}
+}
