@@ -24,8 +24,8 @@ CREATE TABLE Events (
 CREATE TABLE Attendance (
     attendanceID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) FOREIGN KEY NOT NULL,
-    eventID INT FOREIGN KEY NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    eventID INT NOT NULL,
     FOREIGN KEY (email) REFERENCES Users(email),
     FOREIGN KEY (eventID) REFERENCES Events(eventID)
 );
