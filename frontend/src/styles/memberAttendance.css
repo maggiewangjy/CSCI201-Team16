@@ -30,14 +30,22 @@
 }
 
 #attendance-search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     border: 3px solid var(--beige);
     width: 89.5%;
     height: 3em;
     background-color: white;
     border: 3px solid var(--darkRed);
 }
+
+#searchButton {
+    height: 100%;
+}
 #search {
-    width: 89%;
+    font-size: 1.25em;
+    width: 100%;
     border: none;
     outline: none;
 }
@@ -49,6 +57,8 @@
 #search-result {
     display: flex;
     position: relative;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     padding: 10px;
     background-color: white;
@@ -56,4 +66,8 @@
     height: 500px;
     width: 88.25%;
     border: 3px solid var(--beige)
+}
+
+#search-result h3{
+    text-align: center;
 }

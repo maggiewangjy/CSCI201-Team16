@@ -9,11 +9,11 @@ import java.sql.Timestamp;
 
 public class EventDatabase {
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/CSCI201-Team16";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "root";
 
-    private static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } 
@@ -24,13 +24,41 @@ public class EventDatabase {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
   
-    private static void closeResources(ResultSet rs, Statement st, Connection conn) {
+    public static void closeResources(ResultSet rs, Statement st, Connection conn) {
         try {
             if (rs != null) rs.close();
             if (st != null) st.close();
             if (conn != null) conn.close();
         } catch (SQLException sqle) {
             sqle.printStackTrace();
+        }
+    }
+
+    public static void addEvent(Event event) 
+    {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try 
+        {
+            conn = getConnection(); 
+            ps = conn.prepareStatement("INSERT INTO Events (name, startTime, endTime, location, agenda, date, dateMonth) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            ps.setString(1, event.getName());
+            ps.setTimestamp(2, event.getStartTime());
+            ps.setTimestamp(3, event.getEndTime());
+            ps.setString(4, event.getLocation());
+            ps.setString(5, event.getAgenda());
+            ps.setString(6, event.getDate());
+            ps.setString(7, event.getDateMonth());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        } 
+        finally 
+        {
+            closeResources(null, ps, conn);
         }
     }
 
@@ -103,42 +131,7 @@ public class EventDatabase {
         return events;
     }
 
-
-    public static void addAttendee(int eventID, User user) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            conn = getConnection();
-            ps = conn.prepareStatement("INSERT INTO Attendance (name, email, eventID) VALUES (?, ?, ?)");
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setInt(3, eventID);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources(rs, ps, conn);
-        }
-
-    public static void removeAttendee (int eventID, String email) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = getConnection();
-            ps = conn.prepareStatement("DELETE FROM Attendance WHERE eventID = ? AND email = ?");
-            ps.setInt(1, eventID);
-            ps.setInt(2, email);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources(null, ps, conn);
-        }
-    }
-
-    public void deleteEvent(int eventID) 
+    public static void deleteEvent(int eventID) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -160,7 +153,7 @@ public class EventDatabase {
         }
     }
 
-    public void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
+    public static void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -186,16 +179,4 @@ public class EventDatabase {
             closeResources(null, ps, conn);
         }
     }
-
-    public String displayDetails() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Event: ").append(name).append("\n")
-          .append("Date: ").append(date).append("\n")
-          .append("Start Time: ").append(startTime).append("\n")
-          .append("End Time: ").append(endTime).append("\n")
-          .append("Agenda: ").append(agenda).append("\n")
-        sb.append("Attendees:\n");
-        for (User m : attendees) sb.append("- ").append(m.getName()).append("\n"); // this needs to be changed with new attendance
-        return sb.toString();
-    }
-}}
+}

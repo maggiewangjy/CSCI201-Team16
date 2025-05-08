@@ -3,7 +3,7 @@ import java.sql.*;
 public class AttendancesDatabaseUtil {
 
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/CSCI201-Team16";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "root";
 
@@ -26,22 +26,38 @@ public class AttendancesDatabaseUtil {
         }
     }
 
-    public void registerMember(User user) throws SQLException {
+    public static void addAttendee(int eventID, User user) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
             conn = getConnection();
-            ps = conn.prepareStatement("INSERT INTO attendance (eventID, email, name) VALUES (?, ?, ?)");
-            // add info
-            rs = ps.executeQuery();
-        }
-        catch (SQLException e) {
+            ps = conn.prepareStatement("INSERT INTO Attendance (name, email, eventID) VALUES (?, ?, ?)");
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setInt(3, eventID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             closeResources(rs, ps, conn);
+        }
+    }
+
+    public static void removeAttendee(int eventID, String email) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("DELETE FROM Attendance WHERE eventID = ? AND email = ?");
+            ps.setInt(1, eventID);
+            ps.setString(2, email);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(null, ps, conn);
         }
     }
 }

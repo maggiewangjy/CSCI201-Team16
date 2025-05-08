@@ -1,66 +1,64 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-@WebServlet("/GetEventServlet")
-public class GetEventServlet extends HttpServlet {
-    public GetEventServlet() {
-        super();
-    }
+@WebServlet("/GetEventByMonth")
+public class GetEventByMonthServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Handle GET request to fetch event by ID
-        response.setContentType("application/json");
-       
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
-        JsonObject responseJson = new JsonObject();
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
         
-        try {
-            BufferedReader reader = request.getReader();
-            JsonObject requestJson = gson.fromJson(reader, Event.class);
-            
-            // Extract eventID from the JSON request
-            int eventID = requestJson.get("eventID").getAsInt();
-            
-            if (event != null) {
-                // Convert event details to JSON
-                JsonObject eventJson = new JsonObject();
-                eventJson.addProperty("status", "success");
-                eventJson.addProperty("id", event.getEventID());
-                eventJson.addProperty("name", event.getName());
-                eventJson.addProperty("date", event.getDate().toString());
-                eventJson.addProperty("time", event.getTime().toString());
-                eventJson.addProperty("notes", event.getNotes());
-              
-                
-                // Send the response
-                out.println(gson.toJson(eventJson));
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-            } else {
-                responseJson.addProperty("status", "error");
-                out.println(gson.toJson(responseJson));
+        // Passing in MMYYYY
+        String dateMonth = request.getParameter("dateMonth"); 
+
+        try {
+            List<Event> events = EventDatabase.getEventByMonth(dateMonth);
+            
+            // Query return no events
+            if (events.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write("{\"status\":\"success\", \"message\":\"No events found.\", \"data\": []}");
+                return;
             }
+
+            Gson gson = new Gson();
+            String jsonData = gson.toJson(events);
+            
+            String jsonResponse = String.format(
+                "{\"status\":\"success\", \"message\":\"Events retrieved.\", \"data\": %s}",
+                jsonData
+            );
+            
+            // Send list of events back to front-end
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(jsonResponse);
+
         } catch (Exception e) {
-            responseJson.addProperty("status", "error");
-            out.println(gson.toJson(responseJson));
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"status\":\"error\", \"message\":\"Server error.\", \"data\": null}");
         }
     }
+
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
 }

@@ -9,20 +9,27 @@ import MemberAttendance from "../components/MemberAttendance.jsx";
 
 function ClubLeaderPage(){
     const currDate = new Date();
+    const mm = String(currDate.getMonth() + 1).padStart(2, '0');
+	const dd = String(currDate.getDate()).padStart(2, '0');
+	const yyyy = currDate.getFullYear();
+	const mmddyyyy = `${mm}${dd}${yyyy}`;
     const [showCreateEvent, setCreateEvent] = useState(false);
-    const [selectedEventDate, setSelectedEventDate] = useState(currDate);
+
+    const [selectedEventDate, setSelectedEventDate] = useState(mmddyyyy);
+
 
     const openCreateEvent = () => {
-        console.log("openCreateEvent clicked");
+
         setSelectedEventDate(null);
         setCreateEvent(true);
     }
 
     const openSelectedDate = async (date) => {
         setCreateEvent(false);
-        const newDate = new Date(currDate);
-        newDate.setDate(date);
-        setSelectedEventDate(newDate);
+
+        setSelectedEventDate(date);
+        
+
     }
 
     return (
