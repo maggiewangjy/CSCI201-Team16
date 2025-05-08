@@ -34,6 +34,34 @@ public class EventDatabase {
         }
     }
 
+    public static void addEvent(Event event) 
+    {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try 
+        {
+            conn = getConnection(); 
+            ps = conn.prepareStatement("INSERT INTO Events (name, startTime, endTime, location, agenda, date, dateMonth) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            ps.setString(1, event.getName());
+            ps.setTimestamp(2, event.getStartTime());
+            ps.setTimestamp(3, event.getEndTime());
+            ps.setString(4, event.getLocation());
+            ps.setString(5, event.getAgenda());
+            ps.setString(6, event.getDate());
+            ps.setString(7, event.getDateMonth());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        } 
+        finally 
+        {
+            closeResources(null, ps, conn);
+        }
+    }
+
     public static List<Event> getEventByMonth(String month) {
         List<Event> events = new ArrayList<>();
         Connection conn = null;
