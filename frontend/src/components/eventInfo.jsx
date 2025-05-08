@@ -11,28 +11,20 @@ function EventInfo({ selectedDate }) {
         // Check login state
         setIsLoggedIn(localStorage.getItem("logged-in") === "true");
         if (selectedDate) {
-            fetchEvents();
+            fetchEvent();
         }
     }, [selectedDate]);
 
-    const fetchEvents = async () => {
+    const fetchEvent = async () => {
         try {
             setLoading(true);
-            console.log('Attempting to fetch events from:', 'http://localhost:8080/CSCI201-Team16/ListEventsServlets');
-            const response = await fetch('http://localhost:8080/CSCI201-Team16/ListEventsServlets', {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            });
-            
+
+            const URL = 'http://localhost:8080/Team16_CSCI201_Project/GetEventByDate?date=selectedDate';
+            const response = await fetch(URL);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
-            const events = await response.json();
-            console.log('Fetched events:', events);
+            const result = await response.json();
             
             // Format the selected date to match the backend date format (YYYY-MM-DD)
             const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
@@ -124,7 +116,7 @@ function EventInfo({ selectedDate }) {
                 )}
                 <div id="buttons">
                     {isLoggedIn && <button>Edit Event</button>}
-                    <button>Attend</button>
+                    {isLoggedIn && <button>Attend</button>}
                 </div>
             </div>
         </div>

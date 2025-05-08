@@ -33,7 +33,7 @@ function ClubLeaderPage(){
             {showCreateEvent && <p>Create Component</p>}
             {selectedEventDate && <EventInfo selectedDate={selectedEventDate}/>}
             {/* {showCreateEvent && <CreateEvent/>}
-            {(selectedEventDate !== null) && <selectedEventDate eventDate={selectedEventDate}/>} */}
+            {(selectedEventDate !== null) && <EventInfo selectedDate={selectedEventDate}/>} */}
        </div>
        <MemberAttendance/>
     </div>
