@@ -1,5 +1,5 @@
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -48,17 +48,14 @@ public class AddEventServlet extends HttpServlet {
             LocalTime startTime = LocalTime.parse(startStr);
             LocalTime endTime = LocalTime.parse(endStr);
 
-            LocalDateTime start = LocalDateTime.of(date, startTime);
-            LocalDateTime end = LocalDateTime.of(date, endTime);
-
-            Timestamp startTs = Timestamp.valueOf(start);
-            Timestamp endTs = Timestamp.valueOf(end);
+            Time startSqlTime = Time.valueOf(startTime);
+            Time endSqlTime = Time.valueOf(endTime);
 
             // Format MMDDYYYY and MMyyyy for DB
             String dateFormatted = date.format(DateTimeFormatter.ofPattern("MMddyyyy"));
             String dateMonth = date.format(DateTimeFormatter.ofPattern("MMyyyy"));
 
-            Event event = new Event(0, name, startTs, endTs, location, agenda, dateFormatted, dateMonth);
+            Event event = new Event(0, name, startSqlTime, endSqlTime, location, agenda, dateFormatted, dateMonth);
             calendar.addEvent(event);
 
             response.setStatus(HttpServletResponse.SC_OK);
