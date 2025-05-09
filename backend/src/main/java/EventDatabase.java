@@ -3,10 +3,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.Result;
-
-import java.sql.Timestamp;
-
 public class EventDatabase {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
@@ -44,8 +40,8 @@ public class EventDatabase {
             conn = getConnection(); 
             ps = conn.prepareStatement("INSERT INTO Events (name, startTime, endTime, location, agenda, date, dateMonth) VALUES (?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, event.getName());
-            ps.setTimestamp(2, event.getStartTime());
-            ps.setTimestamp(3, event.getEndTime());
+            ps.setTime(2, event.getStartTime());
+            ps.setTime(3, event.getEndTime());
             ps.setString(4, event.getLocation());
             ps.setString(5, event.getAgenda());
             ps.setString(6, event.getDate());
@@ -78,8 +74,8 @@ public class EventDatabase {
                 Event event = new Event(
                     rs.getInt("eventID"),
                     rs.getString("name"),
-                    rs.getTimestamp("startTime"),
-                    rs.getTimestamp("endTime"),
+                    rs.getTime("startTime"),
+                    rs.getTime("endTime"),
                     rs.getString("location"),
                     rs.getString("agenda"),
                     rs.getString("date"),
@@ -102,19 +98,22 @@ public class EventDatabase {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-
+    
         try {
             conn = getConnection();
-            ps = conn.prepareStatement("SELECT * FROM Events WHERE date = ?");
+            ps = conn.prepareStatement(
+                "SELECT eventID, name, TIME(startTime) AS startTime, TIME(endTime) AS endTime, agenda, location, date, dateMonth " +
+                "FROM Events WHERE date = ?"
+            );
             ps.setDate(1, Date.valueOf(date));
             rs = ps.executeQuery();
-
+    
             while (rs.next()) {
                 Event event = new Event(
                     rs.getInt("eventID"),
                     rs.getString("name"),
-                    rs.getTimestamp("startTime"),
-                    rs.getTimestamp("endTime"),
+                    rs.getTime("startTime"),  
+                    rs.getTime("endTime"),     
                     rs.getString("agenda"),
                     rs.getString("location"),
                     rs.getString("date"),
@@ -127,9 +126,9 @@ public class EventDatabase {
         } finally {
             closeResources(rs, ps, conn);
         }
-
+    
         return events;
-    }
+    }    
 
     public static void deleteEvent(int eventID) 
     {
@@ -153,10 +152,12 @@ public class EventDatabase {
         }
     }
 
-    public static void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
+    public static int updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
+        // Added to track number of affected rows
+        int rows = 0;
 
         try 
         {
@@ -168,7 +169,8 @@ public class EventDatabase {
             ps.setString(4, location);
             ps.setString(5, agenda);
             ps.setInt(6, eventID);  
-            ps.executeUpdate();
+            // Updated to get number of affected rows
+            rows = ps.executeUpdate();
         }
         catch (SQLException e) 
         {
@@ -178,5 +180,25 @@ public class EventDatabase {
         {
             closeResources(null, ps, conn);
         }
+        return rows;
+    }
+
+    public static int getTotalEvents() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(eventID) AS totalEvents FROM Events");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("totalEvents");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return -1; // error
     }
 }

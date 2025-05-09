@@ -5,19 +5,64 @@ import SignUpCard from "../components/signUpCard.jsx";
 import ContinueAsGuest from "../components/continueAsGuest.jsx";
 import logo from "../images/logoBackGroundRemoved.png";
 import "../styles/login.css";
+import { useEffect, useState } from "react";
 
 const Login = () => {
-  const handleLogin = (e) => {
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-   
+    setError("");
+    setLoading(true);
+    
+    // Get form values
+    const username = e.target.username.value;
+    const password = e.target.password.value;
+    
+    try {
+      // Create URL-encoded form data as expected by the servlet
+      const formData = new URLSearchParams();
+      formData.append("email", username); // Map username field to email parameter expected by servlet
+      formData.append("password", password);
+      
+      // Make POST request to the servlet
+      const response = await fetch("/Login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData.toString(),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Login successful
+        console.log("Login successful", data);
+        // Store user ID in localStorage or sessionStorage
+        localStorage.setItem("userID", data.data.userID);
+        
+        window.location.href = "/memberPage";
+      } else {
+        // Login failed
+        setError(data.message || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleContinueAsGuest = () => {
-    
+    window.location.href = "/guestPage";
   };
 
   const handleSignUp = () => {
-   
+    window.location.href = "/memberSignUp";
   };
 
   return (
@@ -49,7 +94,7 @@ const Login = () => {
               <button type="submit" className="login-button">
                 Login
               </button>
-              <p className="forgot-password">Forgot Password?</p>
+{/*               <p className="forgot-password">Forgot Password?</p> */}
             </form>
           </div>
           

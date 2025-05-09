@@ -8,7 +8,7 @@ const ContinueAsGuest = ({ onContinue }) => {
         Continue as <br /> Member (Guest)
       </h2>
       <button className="guest-button" onClick={onContinue}>
-        Continue <span className="guest-arrow">➔</span>
+        Cont. <span className="guest-arrow">➔</span>
       </button>
     </div>
   );

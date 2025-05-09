@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,48 +15,43 @@ public class UpdateEventInfoServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String eventID = request.getParameter("eventID");
+        int eventID = Integer.parseInt(request.getParameter("eventID"));
         String date = request.getParameter("date");
-        String startTime = request.getParameter("startTime");
-        String endTime = request.getParameter("endTime");
+        Timestamp startTime = Timestamp.valueOf(request.getParameter("startTime"));
+        Timestamp endTime = Timestamp.valueOf(request.getParameter("endTime"));
         String location = request.getParameter("location");
         String agenda = request.getParameter("agenda");
 
-        // TODO do all fields need to be filled out? Check with team
-        if (eventID == null || date == null || startTime == null || endTime == null || location == null || agenda == null ||
-            eventID.isEmpty() || date.isEmpty() || startTime.isEmpty() || endTime.isEmpty() || location.isEmpty() || agenda.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"status\":\"fail\", \"message\":\"All fields are required.\"}");
-            return;
-        }
+        try {
+        	int rows = EventDatabase.updateEvent(eventID, date, startTime, endTime, location, agenda);
 
-        try (Connection conn = EventDatabase.getConnection()) {
-            String sql = "UPDATE events SET date = ?, startTime = ?, endTime = ?, location = ?, agenda = ? WHERE eventID = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, date);
-            stmt.setString(2, startTime);
-            stmt.setString(3, endTime);
-            stmt.setString(4, location);
-            stmt.setString(5, agenda);
-            stmt.setString(6, eventID);
-
-            int rows = stmt.executeUpdate();
-            if (rows > 0) {
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write("{\"status\":\"success\", \"message\":\"Event updated successfully.\"}");
-            } else {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                response.getWriter().write("{\"status\":\"fail\", \"message\":\"Event not found.\"}");
-            }
+        	if (rows > 0) {
+        	    response.setStatus(HttpServletResponse.SC_OK);
+        	    response.getWriter().write("{\"status\":\"success\", \"message\":\"Event updated successfully.\"}");
+        	} else {
+        	    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        	    response.getWriter().write("{\"status\":\"fail\", \"message\":\"Event not found.\"}");
+        	}
 
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"status\":\"fail\", \"message\":\"Server error while updating event.\"}");
         }
+    }
+    
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

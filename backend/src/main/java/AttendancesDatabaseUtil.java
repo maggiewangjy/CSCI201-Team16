@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 public class AttendancesDatabaseUtil {
 
@@ -59,5 +60,67 @@ public class AttendancesDatabaseUtil {
         } finally {
             closeResources(null, ps, conn);
         }
+    }
+
+    public static int getAttendeeCountForEvent(int eventID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(attendanceID) AS totalAttendees FROM Attendance WHERE eventID = ?");
+            ps.setInt(1, eventID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("totalAttendees");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return -1; // error
+    }
+
+    public static ArrayList<String> getAllAttendeesForEvent(int eventID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<String> attendeeNames = new ArrayList<String>();
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT name FROM Attendance WHERE eventID = ?");
+            ps.setInt(1, eventID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                attendeeNames.add(rs.getString("name"));
+            }
+            return attendeeNames;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return null; // error
+    }
+
+    public static int getAllEventsforAttendee(String email) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(attendanceID) AS totalEventsAttended FROM Attendance WHERE email = ?");
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("totalEventsAttended");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return -1; // error
     }
 }

@@ -1,5 +1,5 @@
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,6 +18,9 @@ public class AddEventServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -45,17 +48,14 @@ public class AddEventServlet extends HttpServlet {
             LocalTime startTime = LocalTime.parse(startStr);
             LocalTime endTime = LocalTime.parse(endStr);
 
-            LocalDateTime start = LocalDateTime.of(date, startTime);
-            LocalDateTime end = LocalDateTime.of(date, endTime);
-
-            Timestamp startTs = Timestamp.valueOf(start);
-            Timestamp endTs = Timestamp.valueOf(end);
+            Time startSqlTime = Time.valueOf(startTime);
+            Time endSqlTime = Time.valueOf(endTime);
 
             // Format MMDDYYYY and MMyyyy for DB
             String dateFormatted = date.format(DateTimeFormatter.ofPattern("MMddyyyy"));
             String dateMonth = date.format(DateTimeFormatter.ofPattern("MMyyyy"));
 
-            Event event = new Event(0, name, startTs, endTs, location, agenda, dateFormatted, dateMonth);
+            Event event = new Event(0, name, startSqlTime, endSqlTime, location, agenda, dateFormatted, dateMonth);
             calendar.addEvent(event);
 
             response.setStatus(HttpServletResponse.SC_OK);
@@ -67,4 +67,12 @@ public class AddEventServlet extends HttpServlet {
             response.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to create event.\"}");
         }
     }
+    
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }    
 }
