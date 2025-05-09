@@ -60,4 +60,44 @@ public class AttendancesDatabaseUtil {
             closeResources(null, ps, conn);
         }
     }
+
+    public static int getAllAttendeesForEvent(int eventID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(attendanceID) AS totalAttendees FROM Attendance WHERE eventID = ?");
+            ps.setInt(1, eventID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("totalAttendees");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return -1; // error
+    }
+
+    public static int getAllEventsforAttendee(String email) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(attendanceID) AS totalEventsAttended FROM Attendance WHERE email = ?");
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("totalEventsAttended");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return -1; // error
+    }
 }
