@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AttendancesDatabaseUtil {
 
@@ -61,7 +63,7 @@ public class AttendancesDatabaseUtil {
         }
     }
 
-    public static int getAllAttendeesForEvent(int eventID) {
+    public static int getAttendeeCountForEvent(int eventID) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -79,6 +81,28 @@ public class AttendancesDatabaseUtil {
             closeResources(rs, ps, conn);
         }
         return -1; // error
+    }
+
+    public static ArrayList<String> getAllAttendeesForEvent(int eventID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<String> attendeeNames = new ArrayList<String>();
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT name FROM Attendance WHERE eventID = ?");
+            ps.setInt(1, eventID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                attendeeNames.add(rs.getString("name"));
+            }
+            return attendeeNames;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return null; // error
     }
 
     public static int getAllEventsforAttendee(String email) {
