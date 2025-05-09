@@ -21,7 +21,7 @@ const LoginForm = ({ onSubmit }) => {
         <button type="submit" className="login-button">
           Login
         </button>
-        <p className="forgot-password">Forgot Password?</p>
+{/*         <p className="forgot-password">Forgot Password?</p> */}
       </form>
     );
   };

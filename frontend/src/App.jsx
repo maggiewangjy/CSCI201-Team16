@@ -5,6 +5,7 @@ import Login from "./pages/Login.jsx";
 import ClubLeaderPage from "./pages/ClubLeaderPage.jsx"
 import UserVerification from "./components/UserVerification.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import MemberSignUp from "./pages/memberSignUp.jsx";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           }
         />
         <Route path="*" element={ <NotFound/> }/>
+        <Route path="/signup" element= {<MemberSignUp/>}/>
       </Routes>
     </BrowserRouter>
   )
