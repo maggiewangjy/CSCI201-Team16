@@ -1,17 +1,17 @@
-import java.sql.Timestamp;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 
 public class Event {
     private int eventID;
     private String name;
-    private java.sql.Timestamp startTime;
-    private java.sql.Timestamp endTime;
+    private Time startTime;
+    private Time endTime;
     private String location;
     private String agenda;
     private String date;
     private String dateMonth;
 
-    public Event(int eventID, String name, Timestamp startTime, Timestamp endTime, String location, String agenda, String date, String dateMonth) {
+    public Event(int eventID, String name, Time startTime, Time endTime, String location, String agenda, String date, String dateMonth) {
         this.eventID = eventID;
         this.name = name;
         this.startTime = startTime;
@@ -24,8 +24,8 @@ public class Event {
 
     public int getEventID() { return eventID; }
     public String getName() { return name; }
-    public java.sql.Timestamp getStartTime() { return startTime; }
-    public java.sql.Timestamp getEndTime() { return endTime; }
+    public Time getStartTime() { return startTime; }
+    public Time getEndTime() { return endTime; }
     public String getLocation() { return location; }
     public String getAgenda() { return agenda; }
     public String getDate() { return date; }
