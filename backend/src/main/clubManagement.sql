@@ -12,8 +12,8 @@ CREATE TABLE Users (
 CREATE TABLE Events (
     eventID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    startTime DATETIME NOT NULL,
-    endTime DATETIME NOT NULL,
+    startTime TIMESTAMP NOT NULL,
+    endTime TIMESTAMP NOT NULL,
     location VARCHAR(255),
     agenda TEXT,
     date VARCHAR(255) NOT NULL,
