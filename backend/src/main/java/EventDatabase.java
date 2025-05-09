@@ -3,8 +3,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.sql.Timestamp;
-
 public class EventDatabase {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
@@ -180,5 +178,24 @@ public class EventDatabase {
             closeResources(null, ps, conn);
         }
         return rows;
+    }
+
+    public static int getTotalEvents() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(eventID) AS totalEvents FROM Events");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("totalEvents");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return -1; // error
     }
 }
