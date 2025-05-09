@@ -112,8 +112,8 @@ public class EventDatabase {
                 Event event = new Event(
                     rs.getInt("eventID"),
                     rs.getString("name"),
-                    rs.getTime("startTime"),   // military time
-                    rs.getTime("endTime"),     // military time
+                    rs.getTime("startTime"),  
+                    rs.getTime("endTime"),     
                     rs.getString("agenda"),
                     rs.getString("location"),
                     rs.getString("date"),
