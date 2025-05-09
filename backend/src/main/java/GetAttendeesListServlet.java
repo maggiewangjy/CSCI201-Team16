@@ -1,9 +1,5 @@
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,25 +13,19 @@ public class GetAttendeesListServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    	response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String eventID = request.getParameter("eventID");
+        try {
+            int eventID = Integer.parseInt(request.getParameter("eventID"));
+            ArrayList<String> attendeeNames = AttendancesDatabaseUtil.getAllAttendeesForEvent(eventID);
 
-        List<String> attendeeNames = new ArrayList<>();
-        
-        try (Connection conn = AttendancesDatabaseUtil.getConnection()) {
-            String sql = "SELECT u.name FROM Attendance a JOIN users u ON a.email = u.email WHERE a.eventID = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, eventID);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                attendeeNames.add(rs.getString("name"));
+            if (attendeeNames == null) {
+                throw new Exception("Failed to retrieve attendees.");
             }
 
             // Build JSON array manually
@@ -61,7 +51,7 @@ public class GetAttendeesListServlet extends HttpServlet {
             response.getWriter().write("{\"status\":\"failed\", \"message\":\"Server error.\", \"data\": null}");
         }
     }
-    
+
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
