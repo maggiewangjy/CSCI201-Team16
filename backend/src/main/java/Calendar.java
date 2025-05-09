@@ -18,8 +18,8 @@ public class Calendar {
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, event.getName());
-            ps.setTimestamp(2, event.getStartTime());
-            ps.setTimestamp(3, event.getEndTime());
+            ps.setTime(2, event.getStartTime());
+            ps.setTime(3, event.getEndTime());
             ps.setString(4, event.getLocation());
             ps.setString(5, event.getAgenda());
             ps.setString(6, event.getDate());       // MMDDYYYY (already formatted)
@@ -73,8 +73,8 @@ public class Calendar {
                 Event event = new Event(
                     rs.getInt("eventID"),
                     rs.getString("name"),
-                    rs.getTimestamp("startTime"),
-                    rs.getTimestamp("endTime"),
+                    rs.getTime("startTime"),
+                    rs.getTime("endTime"),
                     rs.getString("location"),
                     rs.getString("agenda"),
                     rs.getString("date"),
