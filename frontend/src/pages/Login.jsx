@@ -5,6 +5,7 @@ import SignUpCard from "../components/signUpCard.jsx";
 import ContinueAsGuest from "../components/continueAsGuest.jsx";
 import logo from "../images/logoBackGroundRemoved.png";
 import "../styles/login.css";
+import { useEffect, useState } from "react";
 
 const Login = () => {
 
