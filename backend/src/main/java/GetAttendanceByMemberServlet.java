@@ -30,34 +30,14 @@ public class GetAttendanceByMemberServlet extends HttpServlet {
             return;
         }
 
-        int userAttendance = 0;
-        int totalEvents = 0;
+        try {
+            int userAttendance = AttendancesDatabaseUtil.getAllEventsforAttendee(email);
+            int totalEvents = EventDatabase.getTotalEvents();
 
-        try (Connection conn = AttendancesDatabaseUtil.getConnection()) {
-            // Count attendance for this email
-            PreparedStatement attendanceStmt = conn.prepareStatement("SELECT COUNT(*) AS count FROM Attendance WHERE email = ?");
-            attendanceStmt.setString(1, email);
-            ResultSet rs1 = attendanceStmt.executeQuery();
-            if (rs1.next()) {
-                userAttendance = rs1.getInt("count");
-            }
+            float userAttendanceRate = (float) userAttendance/totalEvents;
 
-            // Count total events
-            PreparedStatement eventStmt = conn.prepareStatement("SELECT COUNT(*) AS count FROM events");
-            ResultSet rs2 = eventStmt.executeQuery();
-            if (rs2.next()) {
-                totalEvents = rs2.getInt("count");
-            }
-
-            double percentage = (double) userAttendance / totalEvents * 100;
-
-            response.setStatus(HttpServletResponse.SC_OK);
-            String json = String.format(
-                "{\"status\":\"success\", \"message\":\"Attendance calculated.\", \"data\": {\"percentage\": %.2f}}",
-                percentage
-            );
-            response.getWriter().write(json);
-
+            String jsonResponse = String.format("{\"status\":\"success\", \"data\":{\"attendanceRate\": %.2f}}", userAttendanceRate);
+            response.getWriter().write(jsonResponse);
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
