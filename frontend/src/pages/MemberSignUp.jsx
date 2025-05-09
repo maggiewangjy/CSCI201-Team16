@@ -61,7 +61,7 @@ const MemberSignUp = () => {
 
   const handleContinueAsGuest = () => {
     // Redirect to guest page
-    window.location.href = "/guestPage";
+    window.location.href = "/clubLeaderPage";
   };
 
   return (
@@ -129,3 +129,4 @@ const MemberSignUp = () => {
 };
 
 export default MemberSignUp;
+

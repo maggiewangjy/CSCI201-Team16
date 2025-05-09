@@ -5,7 +5,7 @@ import Login from "./pages/Login.jsx";
 import ClubLeaderPage from "./pages/ClubLeaderPage.jsx"
 import UserVerification from "./components/UserVerification.jsx";
 import NotFound from "./pages/NotFound.jsx";
-import MemberSignUp from "./pages/memberSignUp.jsx";
+import MemberSignUp from "./pages/MemberSignUp.jsx"
 
 function App() {
   return (
