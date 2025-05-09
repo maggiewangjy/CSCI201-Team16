@@ -7,9 +7,8 @@ const actualDate = new Date();
 function Calendar({selectEventDate}) {
 	const [dates, setDates] = useState([]);
 	const [monthYear, setMonthYear] = useState("");
-	const [events, setEvents] = useState(null);
-	const [eventFastLookUp, setEventFastLookUp] = useState(new Map());
-
+	const [eventsByDate, setEventsByDate] = useState(new Map());
+	
 	useEffect(() => {
 		calendar();
 	}, []);
@@ -69,8 +68,35 @@ function Calendar({selectEventDate}) {
 		if (activeDate !== null && activeDate.id !== null) {
 			document.getElementById(activeDate.id).classList.remove("active");
 		}
-		console.log(selectedDate);
 		document.getElementById(selectedDate).classList.add("active");
+	}
+
+	const fetchEvents = async () => {
+		const URL = `http://localhost:8080/Team16_CSCI201_Project/GetEventByMonth?dateMonth=${encodeURIComponent(mmyyyy)}`
+		const response = await fetch(URL);
+		const result = await response.json();
+	
+		if (result.status === "success"){
+			console.log(result.data);
+			const map = new Map();
+			result.data.forEach(event => {
+			if (!map.has(event.date)) {
+				map.set(event.date, []);
+			}
+			const eventDetails = {
+				name: event.name,
+				startTime: event.startTime,
+				endTime: event.endTime,
+				location: event.location,
+				agenda: event.agenda,
+				eventID: event.eventID
+			};
+			map.get(event.date).push(eventDetails);
+		});
+		setEventsByDate(map);
+		} else {
+			alert(result.message);
+		}
 	}
 
 	const calendar = async () => {
@@ -81,25 +107,6 @@ function Calendar({selectEventDate}) {
 		const lastDay = new Date(currYear, currMonth + 1, 0);
 		const mmyyyy = `${mm}${currYear}`
 		setMonthYear(currDate.toLocaleString("default", {month: "long", year: "numeric"}));
-
-		const URL = `http://localhost:8080/Team16_CSCI201_Project/GetEventByMonth?dateMonth=${encodeURIComponent(mmyyyy)}`
-		const response = await fetch(URL);
-		const result = await response.json();
-		console.log(result);
-		if (result.status === "success"){
-			const eventMap = new Map();
-			result.data.forEach(event => {
-				console.log(event.date);
-				eventMap.set(event.date, "nothing");
-			})
-			console.log(eventMap);
-			setEventFastLookUp(eventMap);
-			setEvents(result.data);
-			console.log(eventFastLookUp);
-			console.log(events);
-		} else {
-			alert(result.message);
-		}
 
 		const allDates =[];
 		for(let i = firstDay.getDay(); i > 1; i--){
@@ -119,12 +126,15 @@ function Calendar({selectEventDate}) {
 			const mmddyyyy = `${mm}${dd}${yyyy}`;
 			const activeClass = date.toDateString() === actualDate.toDateString() ? "active" : "";
 			allDates.push(<div id={mmddyyyy} key={mmddyyyy} className={`date ${activeClass}`} onClick={() => manageSelectDate(mmddyyyy)}>{dd}</div>);
-			if (eventFastLookUp !== null && eventFastLookUp.has(mmddyyyy)){
-				for(const event of events){
-					if (event.date === mmddyyyy){
-						document.getElementById(mmddyyyy).innerHTML += <p className="EventInCalendar">{event.startTime} - {event.name}</p>
-					}
-				}
+			
+			console.log(eventsByDate);
+			if (eventsByDate.has(mmddyyyy)){
+				console.log("here");
+				const events = eventsByDate.get(mmddyyyy);
+				events.forEach(event => {
+					console.log(event)
+					document.getElementById(mmddyyyy).innerHTML += `<p class="EventInCalendar">${event.startTime} - ${event.name}</p>`;
+				})
 			}
 		}
 		for(let i = 1; i <= 7 - lastDay.getDay(); i++){
