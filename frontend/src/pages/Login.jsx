@@ -44,7 +44,7 @@ const Login = () => {
         // Store user ID in localStorage or sessionStorage
         localStorage.setItem("userID", data.data.userID);
         
-        window.location.href = "/memberPage";
+        window.location.href = "/clubLeaderPage";
       } else {
         // Login failed
         setError(data.message || "Login failed. Please try again.");
@@ -58,11 +58,11 @@ const Login = () => {
   };
 
   const handleContinueAsGuest = () => {
-    window.location.href = "/guestPage";
+    window.location.href = "/clubLeaderPage";
   };
 
   const handleSignUp = () => {
-    window.location.href = "/memberSignUp";
+    window.location.href = "/MemberSignUp";
   };
 
   return (
