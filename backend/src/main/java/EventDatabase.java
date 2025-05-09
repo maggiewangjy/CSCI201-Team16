@@ -3,8 +3,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.Result;
-
 import java.sql.Timestamp;
 
 public class EventDatabase {
