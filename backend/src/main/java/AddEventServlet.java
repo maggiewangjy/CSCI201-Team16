@@ -18,6 +18,9 @@ public class AddEventServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -67,4 +70,12 @@ public class AddEventServlet extends HttpServlet {
             response.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to create event.\"}");
         }
     }
+    
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }    
 }

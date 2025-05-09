@@ -153,10 +153,12 @@ public class EventDatabase {
         }
     }
 
-    public static void updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
+    public static int updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
+        // Added to track number of affected rows
+        int rows = 0;
 
         try 
         {
@@ -168,7 +170,8 @@ public class EventDatabase {
             ps.setString(4, location);
             ps.setString(5, agenda);
             ps.setInt(6, eventID);  
-            ps.executeUpdate();
+            // Updated to get number of affected rows
+            rows = ps.executeUpdate();
         }
         catch (SQLException e) 
         {
@@ -178,5 +181,6 @@ public class EventDatabase {
         {
             closeResources(null, ps, conn);
         }
+        return rows;
     }
 }
