@@ -8,7 +8,7 @@ import java.sql.Statement;
 public class UserDatabaseUtil {
     private static final String URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
     private static final String USER = "root";
-    private static final String PASSWORD = "Charlievega05";
+    private static final String PASSWORD = "8*Btkkestr*8";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);

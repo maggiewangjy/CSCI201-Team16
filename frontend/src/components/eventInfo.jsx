@@ -19,7 +19,7 @@ function EventInfo({ selectedDate }) {
         try {
             setLoading(true);
 
-            const URL = 'http://localhost:8080/Team16_CSCI201_Project/GetEventByDate?date=selectedDate';
+            const URL = `http://localhost:8080/Team16_CSCI201_Project/GetEventByDate?date=${encodeURIComponent(selectedDate)}`;
             const response = await fetch(URL);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

@@ -76,6 +76,10 @@
     margin: 5px;
     padding: 5px;
     cursor: pointer;
+    overflow-y: scroll;
+}
+#calendar-dates .date::-webkit-scrollbar {
+    display: none;
 }
 
 #calendar-dates .date.active{
@@ -88,5 +92,23 @@
     cursor: default;
 }
 
+.EventInCalendar-container {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.circle{
+    width: 2px;
+    height: 2px;
+    border: 2px solid var(--darkRed);
+    border-radius: 10px;
+    background-color: var(--darkRed);
+    margin-right: 3px;
+}
 .EventInCalendar{
+    font-size: 0.75em;
+    margin: 0;
+    padding: 0;
 }

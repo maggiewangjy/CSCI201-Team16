@@ -17,7 +17,7 @@ public class GetEventByDateServlet extends HttpServlet {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException { 
     	response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
