@@ -5,7 +5,7 @@ public class AttendancesDatabaseUtil {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "8*Btkkestr*8";
+    private static final String DB_PASSWORD = "password";
 
     public static Connection getConnection() throws SQLException {
         try {

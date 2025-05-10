@@ -32,10 +32,10 @@ function ClubLeaderPage(){
        <NavBar onCreateEventClick={openCreateEvent}/>
        <div id="calendar-event-component">
             <Calendar selectEventDate={openSelectedDate} currDateSelected={selectedEventDate}/>
-            {showCreateEvent && <p>Create Component</p>}
+            {/* {showCreateEvent && <p>Create Component</p>} */}
             {selectedEventDate && <EventInfo selectedDate={selectedEventDate}/>}
-            {/* {showCreateEvent && <CreateEvent/>}
-            {(selectedEventDate !== null) && <EventInfo selectedDate={selectedEventDate}/>} */}
+            {showCreateEvent && <CreateEvent/>}
+            {/* {(selectedEventDate !== null) && <EventInfo selectedDate={selectedEventDate}/>} */}
        </div>
        <MemberAttendance/>
     </div>
