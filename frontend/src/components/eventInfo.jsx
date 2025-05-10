@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from "react-router-dom";
 import "../styles/eventInfo.css";
 
 function EventInfo({ selectedDate }) {
@@ -7,6 +8,7 @@ function EventInfo({ selectedDate }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [error, setError] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Check login state
@@ -44,11 +46,8 @@ function EventInfo({ selectedDate }) {
             }
         } catch (err) {
             console.error('Error fetching events:', err);
-            setError(`Connection Error: Could not connect to the backend server at http://localhost:8080. Please ensure:
-            1. The backend server is running
-            2. The server is running on port 8080
-            3. The application is deployed with context path 'CSCI201-Team16'`);
-            setEvent(null);
+            setError(`Connection Error for Fetching Events`);
+            setEvents(null);
         } finally {
             
         }
@@ -63,18 +62,13 @@ function EventInfo({ selectedDate }) {
 
             // If GetEventByDateServlet connection to backend successful
             if(result.status === "success" && result.data.names) {
-                console.log('In if: ' + result.message)
                 setAttendees(result.data.names);
             }
             else {
                 setAttendees([]);
             }
         } catch (err) {
-            console.error('Error fetching events:', err);
-            setError(`Connection Error for Attendees: Could not connect to the backend server at http://localhost:8080. Please ensure:
-            1. The backend server is running
-            2. The server is running on port 8080
-            3. The application is deployed with context path 'CSCI201-Team16'`);
+            setError(`Connection Error for Attendees List`);
         } finally {
             
         }
@@ -89,13 +83,19 @@ function EventInfo({ selectedDate }) {
     };
 
     const formatTime = (timeString) => {
+
         if (!timeString) return '';
-        // Extract hours and minutes from the time string
-        const [hours, minutes] = timeString.split(':');
+
+        // Separate time from am/pm
+        const [time, AMPM] = timeString.split(' ');
+        // Separate hours from minutes
+        const [hours, minutes] = time.split(':');
+
+        // Format variables
         const hour = parseInt(hours);
-        const ampm = hour >= 12 ? 'pm' : 'am';
-        const formattedHour = hour % 12 || 12; // Convert 0 to 12 for 12am
-        return `${formattedHour}:${minutes}${ampm}`;
+        const ampm = AMPM.toLowerCase()
+
+        return `${hour}:${minutes}${ampm}`;
     };
 
     const getOrdinalSuffix = (day) => {
@@ -123,6 +123,30 @@ function EventInfo({ selectedDate }) {
         return `${realMonth} ${day}${suffix}, ${year}`;
     };
 
+    const handleDelete = async () => {
+        if (!window.confirm("Are you sure you want to delete this event?")) return;
+
+        const eventID = events[currentIndex].eventID;
+        try {
+            const URL = `http://localhost:8080/Team16_CSCI201_Project/DeleteEvent`;
+            const response = await fetch(URL, { 
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `eventID=${encodeURIComponent(eventID)}` 
+            });
+            const result = await response.json();
+            
+            if (result.status === "success"){
+                navigate("/clubLeaderPage");
+            }
+            else{
+                setError("Failed to delete event.");
+            }
+        } catch (err) {
+            setError("Connection Error: Could not delete event.");
+        }
+    };
+
     if (!selectedDate) {
         return null;
     }
@@ -137,16 +161,20 @@ function EventInfo({ selectedDate }) {
                     <div> 
                         <div id="heading">
                             <h1 className="titles"><strong>{formatDate(selectedDate)}</strong></h1>
-                            {isLoggedIn && <button id="delete-button">Delete Event</button>}
+                            {isLoggedIn && <button id="delete-button" onClick={handleDelete}>Delete Event</button>}
                         </div>
                         <div id="event-card">
                             <div id="header-info">
                                 <h1>{events[currentIndex].name}</h1>
                                 <p>{formatTime(events[currentIndex].startTime)} - {formatTime(events[currentIndex].endTime)}</p>
-                                <p>Location: {events[currentIndex].location}</p>
+                                {events[currentIndex].location != null ? (<p>Location: {events[currentIndex].location}</p>):(<p></p>)}
                             </div>
-                            <h4 className="titles"><strong>Agenda</strong></h4>
-                            <p>{events[currentIndex].agenda}</p>
+                            {events[currentIndex].agenda != null ? (
+                                <div>
+                                    <h4 className="titles"><strong>Agenda</strong></h4>
+                                    <p>{events[currentIndex].agenda}</p>
+                                </div>
+                            ):(<p></p>)}
                             <h4 className="titles"><strong>Attendees</strong></h4>
                             <ul>
                                 {attendees.length > 0 ? (
@@ -157,8 +185,8 @@ function EventInfo({ selectedDate }) {
                             </ul>
                         </div>
                         <div id="buttons">
-                            {isLoggedIn && <button class="bottom-buttons">Edit Event</button>}
-                            {isLoggedIn && <button class="bottom-buttons">Attend</button>}
+                            {isLoggedIn && <button className="bottom-buttons">Edit Event</button>}
+                            {isLoggedIn && <button className="bottom-buttons">Attend</button>}
                         </div>
                     </div>
                 ) : (
@@ -173,8 +201,8 @@ function EventInfo({ selectedDate }) {
                 )}
                 {events.length > 0 ? (
                     <div id="navigation-buttons">
-                        <button class="nav-buttons" onClick={prevEvent}>&larr;</button>
-                        <button class="nav-buttons" onClick={nextEvent}>&rarr;</button>
+                        <button className="nav-buttons" onClick={prevEvent}>&larr;</button>
+                        <button className="nav-buttons" onClick={nextEvent}>&rarr;</button>
                     </div>
                 ) : (<div></div>)}
             </div>

@@ -8,11 +8,9 @@
 #event {
     display: flex;
     justify-content: space-between;
-    /* padding-left: 20px; */
-    /* padding-right: 20px; */
 }
 
-#form {
+#form-card {
     padding: 20px;
     padding-bottom: none;
     width: 350px;
@@ -28,13 +26,14 @@
 
 label {
     font-size: 20px;
+    margin-bottom: 5px;
 }
 
 input, textarea {
     padding: 8px;
     border: 1px solid var(--darkRed);
     border-radius: 4px;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
     width: 100%;
     box-sizing: border-box;
 }
@@ -46,22 +45,44 @@ textarea {
 #times {
     display: flex;
     gap: 20px;
+    margin-bottom: none;
 }
 
 #times div {
     display: flex;
     flex-direction: column;
     width: 50%;
+    margin-top: none;
 }
 
-button {
+#buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    width: 200px;
+    height: 30px;
+    background-color: var(--lightRed);
+    border: 4px solid var(--darkRed);
+    border-top: none;
+}
+
+#buttons button {
     background-color: var(--darkRed);
     color: white;
     width: 100px;
     border: none;
 }
 
-button:hover {
+#buttons button:hover {
     background-color: #5c0101;
     cursor: pointer;
 }
+
+.error-message {
+    color: var(--darkRed);
+    font-weight: bold;
+    font-size: small;
+    width: 100%;
+    margin-top: 5px;
+}
+
