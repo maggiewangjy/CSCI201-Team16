@@ -3,7 +3,7 @@ import ContinueAsGuest from "../components/continueAsGuest.jsx";
 import logo from "../images/logoBackGroundRemoved.png";
 import "../styles/clubLeaderSignUp.css";
 
-const memberSignUp = () => {
+const MemberSignUp = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ const memberSignUp = () => {
 
   const handleContinueAsGuest = () => {
     // Redirect to guest page
-    window.location.href = "/guestPage";
+    window.location.href = "/clubLeaderPage";
   };
 
   return (
@@ -128,4 +128,5 @@ const memberSignUp = () => {
   );
 };
 
-export default memberSignUp;
+export default MemberSignUp;
+

@@ -5,7 +5,7 @@
   
   .guest-container {
     flex: 1;
-    background-color: var(--darkRed);
+    background-color: --darkRed;
     color: white;
     display: flex;
     flex-direction: column;
@@ -23,8 +23,8 @@
   }
   
   .guest-button {
-    background-color: var(--lightCream);
-    color: var(--darkRed);
+    background-color: --lightCream;
+    color: --darkRed;
     font-weight: bold;
     padding: 0.75rem 1.5rem;
     border-radius: 9999px;
@@ -34,6 +34,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    width:fit-content;
     transition: background-color 0.3s ease;
   }
   
