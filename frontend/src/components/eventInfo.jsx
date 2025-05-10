@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import "../styles/eventInfo.css";
 
 function EventInfo({ selectedDate }) {
-    const [event, setEvent] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [events, setEvents] = useState([]);
+    const [attendees, setAttendees] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [error, setError] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -15,30 +16,32 @@ function EventInfo({ selectedDate }) {
         }
     }, [selectedDate]);
 
+    useEffect(() => {
+        if (events.length > 0) {
+            fetchAttendees(events[currentIndex].eventID);
+        }
+    }, [currentIndex, events]);
+
     const fetchEvent = async () => {
         try {
-            setLoading(true);
-
-            const URL = 'http://localhost:8080/Team16_CSCI201_Project/GetEventByDate?date=selectedDate';
+            // Get event from backend 
+            const URL = `http://localhost:8080/Team16_CSCI201_Project/GetEventByDate?date=${encodeURIComponent(selectedDate)}`;
             const response = await fetch(URL);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
             const result = await response.json();
-            
-            // Format the selected date to match the backend date format (YYYY-MM-DD)
-            const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
-            console.log('Looking for events on date:', formattedDate);
-            
-            // Find the event for the selected date
-            const eventForDate = events.find(event => {
-                const eventDate = new Date(event.date).toISOString().split('T')[0];
-                return eventDate === formattedDate;
-            });
-            
-            console.log('Found event:', eventForDate);
-            setEvent(eventForDate || null);
-            setError(null);
+
+            // If GetEventByDateServlet connection to backend successful
+            if(result.status === "success" ) {
+                // If no events are found on this date, event card will display "No Event"  
+                if(result.message === "No events found."){
+                    setEvents([]);
+                    setCurrentIndex(0);
+
+                }
+                else if(result.message === "Events retrieved.") {
+                    setEvents(result.data)
+                    setCurrentIndex(0);
+                }
+            }
         } catch (err) {
             console.error('Error fetching events:', err);
             setError(`Connection Error: Could not connect to the backend server at http://localhost:8080. Please ensure:
@@ -47,8 +50,42 @@ function EventInfo({ selectedDate }) {
             3. The application is deployed with context path 'CSCI201-Team16'`);
             setEvent(null);
         } finally {
-            setLoading(false);
+            
         }
+    };
+
+    const fetchAttendees = async (eventID) => {
+        try {
+            // Get attendees of event from backend 
+            const URL = `http://localhost:8080/Team16_CSCI201_Project/GetAttendeesList?eventID=${encodeURIComponent(eventID)}`;
+            const response = await fetch(URL);
+            const result = await response.json();
+
+            // If GetEventByDateServlet connection to backend successful
+            if(result.status === "success" && result.data.names) {
+                console.log('In if: ' + result.message)
+                setAttendees(result.data.names);
+            }
+            else {
+                setAttendees([]);
+            }
+        } catch (err) {
+            console.error('Error fetching events:', err);
+            setError(`Connection Error for Attendees: Could not connect to the backend server at http://localhost:8080. Please ensure:
+            1. The backend server is running
+            2. The server is running on port 8080
+            3. The application is deployed with context path 'CSCI201-Team16'`);
+        } finally {
+            
+        }
+    };
+
+    const nextEvent = () => {
+        setCurrentIndex((prev) => (prev + 1) % events.length);
+    };
+
+    const prevEvent = () => {
+        setCurrentIndex((prev) => (prev - 1 + events.length) % events.length);
     };
 
     const formatTime = (timeString) => {
@@ -71,21 +108,23 @@ function EventInfo({ selectedDate }) {
         }
     };
 
-    const formatDate = (date) => {
-        const dateObj = new Date(date);
-        const month = dateObj.toLocaleString('default', { month: 'long' });
-        const day = dateObj.getDate();
-        const year = dateObj.getFullYear();
+    const formatDate = (selectedDate) => {
+        // Separate month, day, and year 
+        const numMonth = parseInt(selectedDate.substring(0, 2)); 
+        const day = parseInt(selectedDate.substring(2, 4));
+        const year = parseInt(selectedDate.substring(4, 8));
+    
+        // Get month string and day suffix 
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        const realMonth = monthNames[numMonth - 1];
         const suffix = getOrdinalSuffix(day);
-        return `${month} ${day}${suffix}, ${year}`;
+
+        // Return formatted date
+        return `${realMonth} ${day}${suffix}, ${year}`;
     };
 
     if (!selectedDate) {
         return null;
-    }
-
-    if (loading) {
-        return <div>Loading...</div>;
     }
 
     if (error) {
@@ -93,33 +132,52 @@ function EventInfo({ selectedDate }) {
     }
 
     return (
-        <div id="event">
             <div>
-                <h1 className="titles"><strong>{formatDate(selectedDate)}</strong></h1>
-                {event ? (
-                    <div id="event-card">
-                        <h1>{event.name}</h1>
-                        <p>{formatTime(event.time)}</p>
-                        <br/>
-                        <h4 className="titles"><strong>Overview</strong></h4>
-                        <p>{event.notes}</p>
-                        <h4 className="titles"><strong>Attendees</strong></h4>
-                        <ul>
-                            {/* TODO: Add attendees list when backend endpoint is available */}
-                            <li>Loading attendees...</li>
-                        </ul>
+                {events.length > 0 ? (
+                    <div> 
+                        <div id="heading">
+                            <h1 className="titles"><strong>{formatDate(selectedDate)}</strong></h1>
+                            {isLoggedIn && <button id="delete-button">Delete Event</button>}
+                        </div>
+                        <div id="event-card">
+                            <div id="header-info">
+                                <h1>{events[currentIndex].name}</h1>
+                                <p>{formatTime(events[currentIndex].startTime)} - {formatTime(events[currentIndex].endTime)}</p>
+                                <p>Location: {events[currentIndex].location}</p>
+                            </div>
+                            <h4 className="titles"><strong>Agenda</strong></h4>
+                            <p>{events[currentIndex].agenda}</p>
+                            <h4 className="titles"><strong>Attendees</strong></h4>
+                            <ul>
+                                {attendees.length > 0 ? (
+                                    attendees.map((name, index) => <li key={index}>{name}</li>)
+                                ) : (
+                                    <li>No attendees</li>
+                                )}
+                            </ul>
+                        </div>
+                        <div id="buttons">
+                            {isLoggedIn && <button class="bottom-buttons">Edit Event</button>}
+                            {isLoggedIn && <button class="bottom-buttons">Attend</button>}
+                        </div>
                     </div>
                 ) : (
-                    <div id="event-card">
-                        <p>No events scheduled for this date.</p>
+                    <div>
+                        <h1 className="titles"><strong>{formatDate(selectedDate)}</strong></h1>
+                        <div id="no-event">
+                            <div id="box">
+                                <p>No Event Scheduled</p>
+                            </div>
+                        </div>
                     </div>
                 )}
-                <div id="buttons">
-                    {isLoggedIn && <button>Edit Event</button>}
-                    {isLoggedIn && <button>Attend</button>}
-                </div>
+                {events.length > 0 ? (
+                    <div id="navigation-buttons">
+                        <button class="nav-buttons" onClick={prevEvent}>&larr;</button>
+                        <button class="nav-buttons" onClick={nextEvent}>&rarr;</button>
+                    </div>
+                ) : (<div></div>)}
             </div>
-        </div>
     );
 }
 
