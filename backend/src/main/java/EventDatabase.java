@@ -2,6 +2,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class EventDatabase {
 
@@ -105,7 +106,8 @@ public class EventDatabase {
                 "SELECT eventID, name, TIME(startTime) AS startTime, TIME(endTime) AS endTime, location, agenda, date, dateMonth " +
                 "FROM Events WHERE date = ?"
             );
-            ps.setDate(1, Date.valueOf(date));
+            //ps.setDate(1, Date.valueOf(date));
+            ps.setString(1, date.format(DateTimeFormatter.ofPattern("MMddyyyy")));
             rs = ps.executeQuery();
     
             while (rs.next()) {

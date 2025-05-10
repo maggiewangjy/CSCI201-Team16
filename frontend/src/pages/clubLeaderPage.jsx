@@ -2,7 +2,7 @@ import NavBar from "../components/navBar.jsx";
 import Calendar from "../components/Calendar.jsx";
 import "../styles/clubLeaderPage.css";
 import CreateEvent from "../components/createEvent.jsx"
-import SelectedEvent from "../components/eventInfo.jsx"
+import EventInfo from "../components/eventInfo.jsx"
 import { useState } from "react";
 import MemberAttendance from "../components/MemberAttendance.jsx";
 
