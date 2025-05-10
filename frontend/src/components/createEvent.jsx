@@ -4,9 +4,6 @@ import "../styles/createEvent.css";
 function CreateEvent(){
     return(
         <div id="event">
-            <div id="calendar">
-                <p>Calendar</p>
-            </div>
             <div>
             <h1 class="titles"><strong>Create Event</strong></h1>
             <div> 
