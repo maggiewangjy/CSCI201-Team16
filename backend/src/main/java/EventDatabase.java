@@ -102,7 +102,7 @@ public class EventDatabase {
         try {
             conn = getConnection();
             ps = conn.prepareStatement(
-                "SELECT eventID, name, TIME(startTime) AS startTime, TIME(endTime) AS endTime, agenda, location, date, dateMonth " +
+                "SELECT eventID, name, TIME(startTime) AS startTime, TIME(endTime) AS endTime, location, agenda, date, dateMonth " +
                 "FROM Events WHERE date = ?"
             );
             ps.setDate(1, Date.valueOf(date));
@@ -114,8 +114,8 @@ public class EventDatabase {
                     rs.getString("name"),
                     rs.getTime("startTime"),  
                     rs.getTime("endTime"),     
-                    rs.getString("agenda"),
                     rs.getString("location"),
+                    rs.getString("agenda"),
                     rs.getString("date"),
                     rs.getString("dateMonth")
                 );
