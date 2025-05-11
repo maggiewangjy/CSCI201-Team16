@@ -20,21 +20,6 @@ const Login = () => {
     // console.log(password);
 
     try {
-<<<<<<< HEAD
-      // Create URL-encoded form data as expected by the servlet
-      const formData = new URLSearchParams();
-      formData.append("email", username); // Map username field to email parameter expected by servlet
-      formData.append("password", password);
-      
-     
-      const response = await fetch("http://localhost:8080/Login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Credentials" : "same-origin"
-        },
-        body: JSON.stringify({ key: 'value' })
-=======
       e.preventDefault;
       const response = await fetch("http://localhost:8080/Team16_CSCI201_Project/Login", {
         method: "POST",
@@ -42,7 +27,6 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
->>>>>>> login
       });
       
       const result = await response.json();
@@ -71,12 +55,8 @@ const Login = () => {
   };
 
   const handleSignUp = () => {
-<<<<<<< HEAD
-    window.location.href = "/signup";
-=======
     localStorage.clear();
     navigate("/signup");
->>>>>>> login
   };
 
   return (
