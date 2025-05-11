@@ -72,5 +72,22 @@ public class UserDatabaseUtil {
         }
         return -1;
     }
+
+    public static int getUserCount() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(email) AS totalUsers FROM Users");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("totalUsers");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 }
     

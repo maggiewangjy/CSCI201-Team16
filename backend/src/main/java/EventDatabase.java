@@ -175,6 +175,12 @@ public class EventDatabase {
         try 
         {
             conn = getConnection();
+            // First delete associated attendance records
+            ps = conn.prepareStatement("DELETE FROM Attendance WHERE eventID = ?");
+            ps.setInt(1, eventID);
+            ps.executeUpdate();
+            
+            // Then delete the event
             ps = conn.prepareStatement("DELETE FROM Events WHERE eventID = ?");
             ps.setInt(1, eventID);
             ps.executeUpdate();

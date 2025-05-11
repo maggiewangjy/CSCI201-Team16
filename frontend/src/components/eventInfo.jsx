@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "../styles/eventInfo.css";
 
-function EventInfo({ selectedDate, onEditEvent }) {
+function EventInfo({ selectedDate, onEditEvent, onViewAttendance }) {
     const [events, setEvents] = useState([]);
     const [attendees, setAttendees] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -59,8 +59,7 @@ function EventInfo({ selectedDate, onEditEvent }) {
     };
 
     const fetchAttendees = async (eventID) => {
-        console.log('selected date: ' + selectedDate);
-        pastEventDate();
+        console.log('Fetching attendees for eventID:', eventID);
         try {
             // Get attendees of event from backend 
             const URL = `http://localhost:8080/Team16_CSCI201_Project/GetAttendeesList?eventID=${encodeURIComponent(eventID)}`;
@@ -68,7 +67,7 @@ function EventInfo({ selectedDate, onEditEvent }) {
             const result = await response.json();
 
             // If GetEventByDateServlet connection to backend successful
-            if(result.status === "success" && result.data.names) {
+            if(result.status === "success" && result.data && result.data.names) {
                 setAttendees(result.data.names);
             }
             else {
@@ -76,12 +75,11 @@ function EventInfo({ selectedDate, onEditEvent }) {
             }
         } catch (err) {
             setError(`Connection Error for Attendees List`);
-        } finally {
-            
         }
     };
 
-    const pastEventDate = (selectedDate) => {
+    const pastEventDate = () => {
+        if (!selectedDate) return false;
 
         const formatDate = (date) => {
             const getMonth = date.substring(0,2);
@@ -192,10 +190,9 @@ function EventInfo({ selectedDate, onEditEvent }) {
                                 )}
                             </ul>
                         </div>
-                        { pastEventDate(selectedDate) ? (
+                        { pastEventDate() ? (
                             <div id="view-attendance-button">
-                                <button>View Event Attendance</button>
-                                {/* attendees.length / total number of members */}
+                                <button  onClick={() => onViewAttendance(events[currentIndex].eventID, attendees, events[currentIndex].name)}>View Event Attendance</button>
                             </div>
                         ) : (
                             <div id="edit-attend-buttons">

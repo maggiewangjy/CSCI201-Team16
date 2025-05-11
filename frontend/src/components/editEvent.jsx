@@ -7,6 +7,7 @@ function EditEvent({ eventId, onClose }) {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -60,6 +61,7 @@ function EditEvent({ eventId, onClose }) {
     loadEvent();
   }, [eventId]);
 
+  // Form Validation
   function formSubmit(e) {
     e.preventDefault();
     let hasError = false;
@@ -120,6 +122,7 @@ function EditEvent({ eventId, onClose }) {
     };
   };
 
+  // Form Submission
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -167,7 +170,7 @@ function EditEvent({ eventId, onClose }) {
             navigate("/clubLeaderPage");
         }
         else{
-            setError("Failed to delete event.");
+            setError(result.message || "Failed to delete event.");
         }
     } catch (err) {
         setError("Connection Error: Could not delete event.");
@@ -180,6 +183,7 @@ function EditEvent({ eventId, onClose }) {
     <div id="event">
       <div>
           <h1 className="titles"><strong>Edit Event</strong></h1>
+          {error && <div className="error-message">{error}</div>}
           <div> 
               <form id="form" onSubmit={formSubmit}> 
                   <div id="form-card">
@@ -210,7 +214,7 @@ function EditEvent({ eventId, onClose }) {
                   </div>
                   <div id="buttons">
                       <button>Save Changes</button>
-                      <button onClick={handleDelete}>Delete Event</button>
+                      <button type="button" onClick={handleDelete}>Delete Event</button>
                   </div>
               </form>
           </div>
