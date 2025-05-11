@@ -8,7 +8,7 @@ import java.sql.Statement;
 public class UserDatabaseUtil {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "Charlievega05";
+    private static final String DB_PASSWORD = "password";
 
     public static Connection getConnection() throws SQLException {
     	try {
@@ -66,6 +66,23 @@ public class UserDatabaseUtil {
             }
             else{
                 return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public static int getUserCount() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(email) AS totalUsers FROM Users");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("totalUsers");
             }
         } catch (SQLException e) {
             e.printStackTrace();

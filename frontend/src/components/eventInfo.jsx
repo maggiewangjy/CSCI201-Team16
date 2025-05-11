@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../styles/eventInfo.css";
 
-function EventInfo({ selectedDate, onEditEvent }) {
+function EventInfo({ selectedDate, onEditEvent, onViewAttendance }) {
     const [events, setEvents] = useState([]);
     const [attendees, setAttendees] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -59,6 +59,7 @@ function EventInfo({ selectedDate, onEditEvent }) {
     };
 
     const fetchAttendees = async (eventID) => {
+        console.log('Fetching attendees for eventID:', eventID);
         try {
             // Get attendees of event from backend 
             const URL = `http://localhost:8080/Team16_CSCI201_Project/GetAttendeesList?eventID=${encodeURIComponent(eventID)}`;
@@ -66,7 +67,7 @@ function EventInfo({ selectedDate, onEditEvent }) {
             const result = await response.json();
 
             // If GetEventByDateServlet connection to backend successful
-            if(result.status === "success" && result.data.names) {
+            if(result.status === "success" && result.data && result.data.names) {
                 setAttendees(result.data.names);
             }
             else {
@@ -74,10 +75,30 @@ function EventInfo({ selectedDate, onEditEvent }) {
             }
         } catch (err) {
             setError(`Connection Error for Attendees List`);
-        } finally {
-            
         }
     };
+
+    const pastEventDate = () => {
+        if (!selectedDate) return false;
+
+        const formatDate = (date) => {
+            const getMonth = date.substring(0,2);
+            const getDay = date.substring(2, 4);
+            const getYear = date.substring(4,8);
+
+            return (`${getYear}-${getMonth}-${getDay}T00:00:00`)
+        }
+        const currentDate = new Date();
+
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate() + 1).padStart(2, '0');
+        const year = currentDate.getFullYear();
+
+        const current = new Date(`${year}-${month}-${day}`); // Current Date
+        const selected = new Date(formatDate(selectedDate)); // Selected Date 
+
+        return (selected < current);
+    }
 
     // const addAttendee = () => {
     //     const userID = localStorage.getItem("userID")
@@ -135,30 +156,6 @@ function EventInfo({ selectedDate, onEditEvent }) {
         return `${realMonth} ${day}${suffix}, ${year}`;
     };
 
-    const handleDelete = async () => {
-        if (!window.confirm("Are you sure you want to delete this event?")) return;
-
-        const eventID = events[currentIndex].eventID;
-        try {
-            const URL = `http://localhost:8080/Team16_CSCI201_Project/DeleteEvent`;
-            const response = await fetch(URL, { 
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `eventID=${encodeURIComponent(eventID)}` 
-            });
-            const result = await response.json();
-            
-            if (result.status === "success"){
-                navigate("/clubLeaderPage");
-            }
-            else{
-                setError("Failed to delete event.");
-            }
-        } catch (err) {
-            setError("Connection Error: Could not delete event.");
-        }
-    };
-
     if (!selectedDate) {
         return null;
     }
@@ -171,10 +168,7 @@ function EventInfo({ selectedDate, onEditEvent }) {
             <div>
                 {events.length > 0 ? (
                     <div> 
-                        <div id="heading">
-                            <h1 className="titles"><strong>{formatDate(selectedDate)}</strong></h1>
-                            {isLoggedIn && <button id="delete-button" onClick={handleDelete}>Delete Event</button>}
-                        </div>
+                        <h1 className="titles"><strong>{formatDate(selectedDate)}</strong></h1>
                         <div id="event-card">
                             <div id="header-info">
                                 <h1>{events[currentIndex].name}</h1>
@@ -196,10 +190,16 @@ function EventInfo({ selectedDate, onEditEvent }) {
                                 )}
                             </ul>
                         </div>
-                        <div id="buttons">
-                            {isLoggedIn && (<button className="bottom-buttons" onClick={() => onEditEvent(events[currentIndex].eventID)}>Edit Event</button>)}
-                            {/* {isLoggedIn && <button className="bottom-buttons" onClick={addAttendee}>Attend</button>} */}
-                        </div>
+                        { pastEventDate() ? (
+                            <div id="view-attendance-button">
+                                <button  onClick={() => onViewAttendance(events[currentIndex].eventID, attendees, events[currentIndex].name)}>View Event Attendance</button>
+                            </div>
+                        ) : (
+                            <div id="edit-attend-buttons">
+                                {isLoggedIn && (<button className="bottom-buttons" onClick={() => onEditEvent(events[currentIndex].eventID)}>Edit Event</button>)}
+                                {/* {isLoggedIn && <button className="bottom-buttons" onClick={addAttendee}>Attend</button>} */}
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div>

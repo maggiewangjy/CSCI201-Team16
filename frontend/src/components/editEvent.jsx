@@ -7,6 +7,7 @@ function EditEvent({ eventId, onClose }) {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -60,6 +61,7 @@ function EditEvent({ eventId, onClose }) {
     loadEvent();
   }, [eventId]);
 
+  // Form Validation
   function formSubmit(e) {
     e.preventDefault();
     let hasError = false;
@@ -120,6 +122,7 @@ function EditEvent({ eventId, onClose }) {
     };
   };
 
+  // Form Submission
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -151,12 +154,36 @@ function EditEvent({ eventId, onClose }) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this event?")) return;
+
+    try {
+        const URL = `http://localhost:8080/Team16_CSCI201_Project/DeleteEvent`;
+        const response = await fetch(URL, { 
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `eventID=${encodeURIComponent(eventId)}` 
+        });
+        const result = await response.json();
+        
+        if (result.status === "success"){
+            navigate("/clubLeaderPage");
+        }
+        else{
+            setError(result.message || "Failed to delete event.");
+        }
+    } catch (err) {
+        setError("Connection Error: Could not delete event.");
+    }
+};
+
   if (loading) return <p>Loading…</p>;
 
   return (
     <div id="event">
       <div>
           <h1 className="titles"><strong>Edit Event</strong></h1>
+          {error && <div className="error-message">{error}</div>}
           <div> 
               <form id="form" onSubmit={formSubmit}> 
                   <div id="form-card">
@@ -187,6 +214,7 @@ function EditEvent({ eventId, onClose }) {
                   </div>
                   <div id="buttons">
                       <button>Save Changes</button>
+                      <button type="button" onClick={handleDelete}>Delete Event</button>
                   </div>
               </form>
           </div>

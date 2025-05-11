@@ -8,7 +8,7 @@ public class EventDatabase {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "Charlievega05";
+    private static final String DB_PASSWORD = "password";
 
     public static Connection getConnection() throws SQLException {
         try {
@@ -175,6 +175,12 @@ public class EventDatabase {
         try 
         {
             conn = getConnection();
+            // First delete associated attendance records
+            ps = conn.prepareStatement("DELETE FROM Attendance WHERE eventID = ?");
+            ps.setInt(1, eventID);
+            ps.executeUpdate();
+            
+            // Then delete the event
             ps = conn.prepareStatement("DELETE FROM Events WHERE eventID = ?");
             ps.setInt(1, eventID);
             ps.executeUpdate();
