@@ -8,7 +8,7 @@ public class EventDatabase {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/ClubEventsDB";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "password";
+    private static final String DB_PASSWORD = "Charlievega05";
 
     public static Connection getConnection() throws SQLException {
         try {

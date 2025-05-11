@@ -1,28 +1,26 @@
 import React from "react";
-import NavBar from "../components/navBar.jsx";
-import LoginForm from "../components/loginForm.jsx";
-import SignUpCard from "../components/signUpCard.jsx";
 import ContinueAsGuest from "../components/continueAsGuest.jsx";
 import logo from "../images/logoBackGroundRemoved.png";
 import "../styles/login.css";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
-
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [invalidFormInput, setInvalidFormInput] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
-    
-    // Get form values
-    const username = e.target.username.value;
+
+    const email = e.target.email.value;
     const password = e.target.password.value;
-    
+
+    // console.log(email);
+    // console.log(password);
+
     try {
+<<<<<<< HEAD
       // Create URL-encoded form data as expected by the servlet
       const formData = new URLSearchParams();
       formData.append("email", username); // Map username field to email parameter expected by servlet
@@ -36,35 +34,49 @@ const Login = () => {
           "Credentials" : "same-origin"
         },
         body: JSON.stringify({ key: 'value' })
+=======
+      e.preventDefault;
+      const response = await fetch("http://localhost:8080/Team16_CSCI201_Project/Login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+>>>>>>> login
       });
       
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Login successful
-        console.log("Login successful", data);
-        // Store user ID in localStorage or sessionStorage
-        localStorage.setItem("userID", data.data.userID);
-        
-        window.location.href = "/clubLeaderPage";
+      const result = await response.json();
+
+      if (result.status === "success") {
+        setInvalidFormInput(false);
+        console.log("Login successful", result);
+        localStorage.clear();
+        localStorage.setItem("userID", result.data.userID);
+        localStorage.setItem("logged-in", "true");
+        navigate("/clubLeaderPage");
       } else {
-        // Login failed
-        setError(data.message || "Login failed. Please try again.");
+        setInvalidFormInput(true);
+        console.log(result.message);
       }
     } catch (err) {
-      console.error("Login error:", err);
-      setError("An error occurred. Please try again later.");
+      setError("An error occurred");
     } finally {
-      setLoading(false);
     }
   };
 
   const handleContinueAsGuest = () => {
-    window.location.href = "/clubLeaderPage";
+    localStorage.clear();
+    localStorage.setItem("logged-in", "false")
+    navigate("/clubLeaderPage");
   };
 
   const handleSignUp = () => {
+<<<<<<< HEAD
     window.location.href = "/signup";
+=======
+    localStorage.clear();
+    navigate("/signup");
+>>>>>>> login
   };
 
   return (
@@ -73,16 +85,16 @@ const Login = () => {
         <div className="logo-container">
           <img src={logo} alt="Club Logo" className="logo" />
         </div>
-        
+
         <div className="login-content">
           <div className="login-card">
             <h2 className="login-title">Club Leader Login</h2>
-            
+
             <form onSubmit={handleLogin} className="custom-login-form">
               <input
-                type="text"
-                placeholder="Username"
-                name="username"
+                type="email"
+                placeholder="Email"
+                name="email"
                 className="login-input"
                 required
               />
@@ -93,13 +105,13 @@ const Login = () => {
                 className="login-input"
                 required
               />
+              {invalidFormInput && <div className="error-message">Invalid Email or Password. Try Again</div>}
               <button type="submit" className="login-button">
                 Login
               </button>
-{/*               <p className="forgot-password">Forgot Password?</p> */}
             </form>
           </div>
-          
+
           <div className="signup-card">
             <h2 className="signup-title">New Club Leader?</h2>
             <button className="signup-button" onClick={handleSignUp}>
@@ -108,11 +120,9 @@ const Login = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="guest-section">
-        {/* <div className="guest-content"> */}
-          <ContinueAsGuest onContinue={handleContinueAsGuest} />
-        {/* </div> */}
+        <ContinueAsGuest onContinue={handleContinueAsGuest} />
       </div>
     </div>
   );
