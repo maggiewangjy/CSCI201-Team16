@@ -21,14 +21,16 @@ public class UpdateEventInfoServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         int eventID = Integer.parseInt(request.getParameter("eventID"));
+        String name = request.getParameter("name");
         String date = request.getParameter("date");
+        String dateMonth = request.getParameter("dateMonth");
         Timestamp startTime = Timestamp.valueOf(request.getParameter("startTime"));
         Timestamp endTime = Timestamp.valueOf(request.getParameter("endTime"));
         String location = request.getParameter("location");
         String agenda = request.getParameter("agenda");
 
         try {
-        	int rows = EventDatabase.updateEvent(eventID, date, startTime, endTime, location, agenda);
+        	int rows = EventDatabase.updateEvent(eventID, name, date, dateMonth, startTime, endTime, location, agenda);
 
         	if (rows > 0) {
         	    response.setStatus(HttpServletResponse.SC_OK);

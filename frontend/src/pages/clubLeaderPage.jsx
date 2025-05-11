@@ -5,6 +5,7 @@ import CreateEvent from "../components/createEvent.jsx"
 import EventInfo from "../components/eventInfo.jsx"
 import { useState } from "react";
 import MemberAttendance from "../components/MemberAttendance.jsx";
+import EditEvent from '../components/editEvent.jsx';
 
 function ClubLeaderPage(){
     const currDate = new Date();
@@ -12,19 +13,39 @@ function ClubLeaderPage(){
 	const dd = String(currDate.getDate()).padStart(2, '0');
 	const yyyy = currDate.getFullYear();
 	const mmddyyyy = `${mm}${dd}${yyyy}`;
-    const [showCreateEvent, setCreateEvent] = useState(false);
+    const [showCreateEvent, setShowCreateEvent] = useState(false);
     const [selectedEventDate, setSelectedEventDate] = useState(mmddyyyy);
-
+    const [editEventID, setEditEventID] = useState(null);
+    const [showEditEvent, setEditEvent] = useState(false);
+    const [showSelectedEventDate, setShowSelectedEventDate] = useState(false);
 
     const openCreateEvent = () => {
-
         setSelectedEventDate(null);
-        setCreateEvent(true);
+        setShowSelectedEventDate(false);
+        setEditEvent(false);
+        setShowCreateEvent(true);
     }
 
     const openSelectedDate = async (date) => {
-        setCreateEvent(false);
         setSelectedEventDate(date);
+        setShowSelectedEventDate(true);
+        setEditEvent(false);
+        setShowCreateEvent(false);
+    }
+
+    const openEditEvent = async (eventId) => {
+        setEditEventID(eventId);
+        setShowSelectedEventDate(false);
+        setEditEvent(true);
+        setShowCreateEvent(false);
+    }
+
+    const closeEditEvent = async () => {
+        setEditEventID(null);
+        setSelectedEventDate(date);
+        setShowSelectedEventDate(true);
+        setEditEvent(false);
+        setShowCreateEvent(false);
     }
 
     return (
@@ -33,8 +54,9 @@ function ClubLeaderPage(){
        <div id="calendar-event-component">
             <Calendar selectEventDate={openSelectedDate} currDateSelected={selectedEventDate}/>
             {/* {showCreateEvent && <p>Create Component</p>} */}
-            {selectedEventDate && <EventInfo selectedDate={selectedEventDate}/>}
+            {showSelectedEventDate && <EventInfo selectedDate={selectedEventDate} onEditEvent={openEditEvent}/>}
             {showCreateEvent && <CreateEvent/>}
+            {showEditEvent && <EditEvent eventId={editEventID} onClose={() => setEditEventID(null)} />}
             {/* {(selectedEventDate !== null) && <EventInfo selectedDate={selectedEventDate}/>} */}
        </div>
        <MemberAttendance/>

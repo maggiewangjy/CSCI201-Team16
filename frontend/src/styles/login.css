@@ -1,3 +1,9 @@
+:root {
+  --lightRed: #FCC2C2;
+  --darkRed: #A31D1D;
+  --lightBeige: #FFFBEE;
+  --beige: #ECDCBF;
+}
 
 .login-container {
     display: flex;
@@ -63,7 +69,7 @@
   }
   
   .login-button {
-    background-color: #A31D1D;
+    background-color: var(--darkRed);
     color: white;
     border: none;
     padding: 0.75rem 0;
@@ -76,7 +82,7 @@
   }
   
   .login-button:hover {
-    background-color: #A31D1D;
+    background-color: #5c0101;
   }
   
   .forgot-password {
@@ -103,7 +109,7 @@
   }
   
   .signup-button {
-    background-color: #A31D1D;
+    background-color: var(--darkRed);
     color: white;
     border: none;
     padding: 0.5rem 1.25rem;
@@ -115,18 +121,5 @@
   }
   
   .signup-button:hover {
-    background-color: #821616;
-  }
-  
-  /* Guest section (right side) styling */
-  .guest-section {
-    flex: 1;
-    background-color: #932c24;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .guest-content {
-    width: 100%;
+    background-color: #5c0101;
   }

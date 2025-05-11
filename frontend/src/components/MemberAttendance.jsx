@@ -39,7 +39,7 @@ function MemberAttendance() {
     return (
         <div id="attendance-container">
             <div id="attendance-title-container">
-                <h2 id="attendance-title">Attendace by Member</h2>
+                <div id="attendance-title">Attendance by Member</div>
             </div>
             <form id="attendance-search" action="AttendanceSearch"> 
                 <input src={SearchIcon} id="searchButton" type="image" alt="search Button"></input>

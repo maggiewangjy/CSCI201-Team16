@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/eventInfo.css";
 
-function EventInfo({ selectedDate }) {
+function EventInfo({ selectedDate, onEditEvent }) {
     const [events, setEvents] = useState([]);
     const [attendees, setAttendees] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -23,6 +23,11 @@ function EventInfo({ selectedDate }) {
             fetchAttendees(events[currentIndex].eventID);
         }
     }, [currentIndex, events]);
+
+    // useEffect(() => {
+    //     const userID = localStorage.getItem("userID");
+    //     console.log("Current user ID:", userID);
+    // }, []);
 
     const fetchEvent = async () => {
         try {
@@ -73,6 +78,13 @@ function EventInfo({ selectedDate }) {
             
         }
     };
+
+    // const addAttendee = () => {
+    //     const userID = localStorage.getItem("userID")
+
+
+
+    // }
 
     const nextEvent = () => {
         setCurrentIndex((prev) => (prev + 1) % events.length);
@@ -185,8 +197,8 @@ function EventInfo({ selectedDate }) {
                             </ul>
                         </div>
                         <div id="buttons">
-                            {isLoggedIn && <button className="bottom-buttons">Edit Event</button>}
-                            {isLoggedIn && <button className="bottom-buttons">Attend</button>}
+                            {isLoggedIn && (<button className="bottom-buttons" onClick={() => onEditEvent(events[currentIndex].eventID)}>Edit Event</button>)}
+                            {/* {isLoggedIn && <button className="bottom-buttons" onClick={addAttendee}>Attend</button>} */}
                         </div>
                     </div>
                 ) : (
@@ -199,7 +211,7 @@ function EventInfo({ selectedDate }) {
                         </div>
                     </div>
                 )}
-                {events.length > 0 ? (
+                {events.length > 1 ? (
                     <div id="navigation-buttons">
                         <button className="nav-buttons" onClick={prevEvent}>&larr;</button>
                         <button className="nav-buttons" onClick={nextEvent}>&rarr;</button>
