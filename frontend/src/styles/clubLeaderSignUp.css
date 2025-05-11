@@ -4,17 +4,15 @@
     width: 100%;
     overflow: hidden;
   }
-  
-  /* Left side containing logo and signup form */
+ 
   .signup-left {
     flex: 2;
-    background-color: #FFFBEE; /* Beige background */
+    background-color: #FFFBEE; 
     display: flex;
     flex-direction: column;
     padding: 2rem;
   }
-  
-  /* Logo styling */
+
   .logo-container {
     margin-bottom: 1rem;
   }
@@ -24,26 +22,25 @@
     height: 60px;
   }
   
-  /* Signup form card styling */
+
   .signup-form-card {
-    background-color: #FFFBEE; /* Same as background for a subtle card effect */
+    background-color: #FFFBEE; 
     border-radius: 20px;
     padding: 2rem;
+    border: 10rem;
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 5px;
   }
   
-  /* Guest section (right side) styling */
   .guest-section {
     flex: 1;
-    background-color: #A31D1D; /* Dark red background */
+    background-color: #A31D1D; 
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
-  /* Center the guest content vertically */
   .guest-content {
     width: 100%;
   }
@@ -51,3 +48,13 @@
   .error-message{
     color: var(--darkRed);
   }
+
+  input, textarea {
+    padding: 8px;
+    border: 1px solid var(--darkRed);
+    border-radius: 4px;
+    margin-bottom: 10px; 
+    width: 100%;
+    box-sizing: border-box;
+}
+

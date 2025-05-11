@@ -35,7 +35,7 @@
   flex-direction: column;
   max-width: 400px;
   margin: 0 auto;
-  margin-top: 80px;
+  margin-top: 10px;
 }
 
 .login-card {
@@ -92,7 +92,7 @@
   width: 100%;
   border-radius: 20px;
   padding: 1.5rem 2rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.10);
 }
 
@@ -106,6 +106,7 @@ input:focus {
   outline: none;
   border: 2px solid var(--lightRed);
 }
+
 .signup-button {
   background-color: var(--lightRed);
   color: white;
@@ -115,6 +116,7 @@ input:focus {
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
+      width: 25rem;
   transition: background-color 0.3s ease;
 }
 
