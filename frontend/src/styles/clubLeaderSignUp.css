@@ -47,3 +47,7 @@
   .guest-content {
     width: 100%;
   }
+
+  .error-message{
+    color: var(--darkRed);
+  }

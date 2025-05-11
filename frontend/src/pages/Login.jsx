@@ -29,9 +29,8 @@ const Login = () => {
       });
       
       const result = await response.json();
-      // console.log(result);
 
-      if (result.status === "successful") {
+      if (result.status === "success") {
         setInvalidFormInput(false);
         console.log("Login successful", result);
         localStorage.clear();
@@ -56,7 +55,7 @@ const Login = () => {
 
   const handleSignUp = () => {
     localStorage.clear();
-    navigate("/MemberSignUp");
+    navigate("/signup");
   };
 
   return (
