@@ -100,12 +100,79 @@ function EventInfo({ selectedDate, onEditEvent, onViewAttendance }) {
         return (selected < current);
     }
 
-    // const addAttendee = () => {
-    //     const userID = localStorage.getItem("userID")
+    const addAttendee = async () => {
+        const name = localStorage.getItem("name");
+        const email = localStorage.getItem("email");
+        
+        console.log('Attempting to add attendee:', { name, email, eventID: events[currentIndex].eventID });
 
+        try {
+            const URL = `http://localhost:8080/Team16_CSCI201_Project/AddAttendeeToEvent`;
+            const response = await fetch(URL, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    eventID: events[currentIndex].eventID
+                })
+            });
+            
+            console.log('Response status:', response.status);
+            const result = await response.json();
+            console.log('Response data:', result.data);
 
+            if (result.status === "success") {
+                console.log('Successfully added attendee');
+                // Refresh the attendees list
+                fetchAttendees(events[currentIndex].eventID);
+                setError(null);
+            } else {
+                console.error('Failed to add attendee:', result);
+                setError(result.message || "Failed to add attendee");
+            }
+        } catch (err) {
+            console.error('Error in addAttendee:', err);
+            setError("Connection error while adding attendee");
+        }
+    };
 
-    // }
+    const removeAttendee = async () => {
+        const name = localStorage.getItem("name");
+        const email = localStorage.getItem("email");
+        
+        console.log('Attempting to remove attendee:', { name, email, eventID: events[currentIndex].eventID });
+
+        try {
+            const URL = `http://localhost:8080/Team16_CSCI201_Project/RemoveAttendeeFromEvent`;
+            const response = await fetch(URL, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    eventID: events[currentIndex].eventID
+                })
+            });
+            
+            console.log('Response status:', response.status);
+            const result = await response.json();
+            console.log('Response data:', result.data);
+
+            if (result.status === "success") {
+                console.log('Successfully removed attendee');
+                // Refresh the attendees list
+                fetchAttendees(events[currentIndex].eventID);
+                setError(null);
+            } else {
+                console.error('Failed to remove attendee:', result);
+                setError(result.message || "Failed to remove attendee");
+            }
+        } catch (err) {
+            console.error('Error in removeAttendee:', err);
+            setError("Connection error while removing attendee");
+        }
+    }
 
     const nextEvent = () => {
         setCurrentIndex((prev) => (prev + 1) % events.length);
@@ -192,12 +259,16 @@ function EventInfo({ selectedDate, onEditEvent, onViewAttendance }) {
                         </div>
                         { pastEventDate() ? (
                             <div id="view-attendance-button">
-                                <button  onClick={() => onViewAttendance(events[currentIndex].eventID, attendees, events[currentIndex].name)}>View Event Attendance</button>
+                                <button onClick={() => onViewAttendance(events[currentIndex].eventID, attendees, events[currentIndex].name)}>View Event Attendance</button>
                             </div>
                         ) : (
                             <div id="edit-attend-buttons">
                                 {isLoggedIn && (<button className="bottom-buttons" onClick={() => onEditEvent(events[currentIndex].eventID)}>Edit Event</button>)}
-                                {/* {isLoggedIn && <button className="bottom-buttons" onClick={addAttendee}>Attend</button>} */}
+                                {isLoggedIn && !attendees.includes(localStorage.getItem("name")) ? (
+                                    <button className="bottom-buttons" onClick={addAttendee}>Attend</button>
+                                ) : (
+                                    <button className="bottom-buttons" onClick={removeAttendee}>Unattend</button>
+                                )}
                             </div>
                         )}
                     </div>

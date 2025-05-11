@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-@WebServlet("/AddAttendeeToEvent")
-public class AddAttendeeToEventServlet extends HttpServlet {
+@WebServlet("/RemoveAttendeeFromEvent")
+public class RemoveAttendeeFromEventServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,10 +53,10 @@ public class AddAttendeeToEventServlet extends HttpServlet {
         try {
             int eventIDInt = Integer.parseInt(eventID);
             User user = new User(name, email, ""); // Password not needed for attendance
-            AttendancesDatabaseUtil.addAttendee(eventIDInt, user);
+            AttendancesDatabaseUtil.removeAttendee(eventIDInt, user);
 
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("{\"status\": \"success\", \"message\": \"Attendee added successfully\"}");
+            response.getWriter().write("{\"status\": \"success\", \"message\": \"Attendee removed successfully\"}");
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("{\"status\": \"failed\", \"message\": \"Invalid eventID\"}");

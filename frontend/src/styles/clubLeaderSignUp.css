@@ -1,13 +1,26 @@
+:root {
+  --lightRed: #FCC2C2;
+  --darkRed: #A31D1D;
+  --lightBeige: #FFFBEE;
+  --beige: #ECDCBF;
+}
+
 .signup-container {
     display: flex;
     height: 100vh;
     width: 100%;
     overflow: hidden;
   }
+
+  #content {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
  
   .signup-left {
     flex: 2;
-    background-color: #FFFBEE; 
+    background-color: white; 
     display: flex;
     flex-direction: column;
     padding: 2rem;
@@ -31,11 +44,12 @@
     width: 100%;
     max-width: 600px;
     margin: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.10);
   }
   
   .guest-section {
     flex: 1;
-    background-color: #A31D1D; 
+    background-color: var(--darkRed); 
     display: flex;
     align-items: center;
     justify-content: center;

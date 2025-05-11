@@ -36,6 +36,10 @@ const Login = () => {
         console.log("Login successful", result);
         localStorage.clear();
         localStorage.setItem("userID", result.data.userID);
+        localStorage.setItem("name", result.data.name);
+        localStorage.setItem("email", result.data.email);
+        console.log("name", result.data.name);
+        console.log("email", result.data.email);
         localStorage.setItem("logged-in", "true");
         navigate("/clubLeaderPage");
       } else {
@@ -68,7 +72,7 @@ const Login = () => {
 
         <div className="login-content">
           <div className="login-card">
-            <h2 className="login-title">Club Leader Login</h2>
+            <h2 className="login-title">Club Member Login</h2>
 
             <form onSubmit={handleLogin} className="custom-login-form">
               <input
@@ -93,7 +97,7 @@ const Login = () => {
           </div>
 
           <div className="signup-card">
-            <h2 className="signup-title">New Club Leader?</h2>
+            <h2 className="signup-title">New Club Member?</h2>
             <button className="signup-button" onClick={handleSignUp}>
               Sign up
             </button>

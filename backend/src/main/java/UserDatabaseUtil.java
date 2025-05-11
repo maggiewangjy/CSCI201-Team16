@@ -36,7 +36,7 @@ public class UserDatabaseUtil {
         }
     }
 
-    public static int getUser(String email, String password) {
+    public static User getUser(String email, String password) {
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
         try (Connection conn = getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -44,15 +44,16 @@ public class UserDatabaseUtil {
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-            	return 1;
+                String name = rs.getString("name");
+                return new User(name, email, password);
             }
             else{
-                return -1;
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+        return null;
     }
     
     public static int getEmail(String email) {
