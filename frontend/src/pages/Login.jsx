@@ -7,6 +7,7 @@ import logo from "../images/logoBackGroundRemoved.png";
 import "../styles/login.css";
 import { useEffect, useState } from "react";
 
+
 const Login = () => {
 
   const [error, setError] = useState("");
@@ -27,13 +28,14 @@ const Login = () => {
       formData.append("email", username); // Map username field to email parameter expected by servlet
       formData.append("password", password);
       
-      // Make POST request to the servlet
-      const response = await fetch("/Login", {
+     
+      const response = await fetch("http://localhost:8080/Login", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          "Credentials" : "same-origin"
         },
-        body: formData.toString(),
+        body: JSON.stringify({ key: 'value' })
       });
       
       const data = await response.json();
@@ -62,7 +64,7 @@ const Login = () => {
   };
 
   const handleSignUp = () => {
-    window.location.href = "/MemberSignUp";
+    window.location.href = "/signup";
   };
 
   return (
