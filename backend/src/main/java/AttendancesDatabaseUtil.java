@@ -45,14 +45,14 @@ public class AttendancesDatabaseUtil {
         }
     }
 
-    public static void removeAttendee(int eventID, String email) {
+    public static void removeAttendee(int eventID, User user) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getConnection();
             ps = conn.prepareStatement("DELETE FROM Attendance WHERE eventID = ? AND email = ?");
             ps.setInt(1, eventID);
-            ps.setString(2, email);
+            ps.setString(2, user.getEmail());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

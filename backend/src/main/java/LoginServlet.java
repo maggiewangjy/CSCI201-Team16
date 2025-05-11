@@ -43,14 +43,14 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            int valid = UserDatabaseUtil.getUser(email, password);
+            User fetchedUser = UserDatabaseUtil.getUser(email, password);
             
             // userID found and successful login
-            if (valid != -1) {
+            if (user != null) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 String json = String.format(
-                    "{\"status\":\"success\", \"message\":\"Login successful.\", \"data\": {\"userID\": %d}}",
-                    valid
+                    "{\"status\":\"success\", \"message\":\"Login successful.\", \"data\": {\"userID\": %d, \"name\": \"%s\", \"email\": \"%s\"}}",
+                    1, fetchedUser.getName(), fetchedUser.getEmail()
                 );
                 response.getWriter().write(json);
             // One or both of email and password do not match and fail log in

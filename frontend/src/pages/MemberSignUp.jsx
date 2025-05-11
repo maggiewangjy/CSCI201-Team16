@@ -55,42 +55,43 @@ const MemberSignUp = () => {
         <div className="logo-container">
           <img src={logo} alt="Club Logo" className="logo" />
         </div>
-
-        <div className="signup-form-card">
-          <h2 className="signup-title">New Club Leader Registration</h2>
-          <form onSubmit={handleRegister} className="signup-form">
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              className="signup-input"
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              className="signup-input"
-              required
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              className="signup-input"
-              required
-            />
-            {invalidFormInput && <div className="error-message">Email already in Exist</div>}
-            <button
-              type="submit"
-              className="signup-button"
-            >
-              Register
-            </button>
-            <p className="login-link">
-              Already have an account? <a href="/login">Login here</a>
-            </p>
-          </form>
+        <div id="content">
+          <div className="signup-form-card">
+            <h2 className="signup-title">New Club Member Registration</h2>
+            <form onSubmit={handleRegister} className="signup-form">
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                className="signup-input"
+                required
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                className="signup-input"
+                required
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="signup-input"
+                required
+              />
+              {invalidFormInput && <div className="error-message">Email already in Exist</div>}
+              <button
+                type="submit"
+                className="signup-button"
+              >
+                Register
+              </button>
+              <p className="login-link">
+                Already have an account? <a href="/login">Login here</a>
+              </p>
+            </form>
+          </div>
         </div>
       </div>
 
