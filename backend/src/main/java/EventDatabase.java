@@ -106,7 +106,6 @@ public class EventDatabase {
                 "SELECT eventID, name, TIME(startTime) AS startTime, TIME(endTime) AS endTime, location, agenda, date, dateMonth " +
                 "FROM Events WHERE date = ?"
             );
-            //ps.setDate(1, Date.valueOf(date));
             ps.setString(1, date.format(DateTimeFormatter.ofPattern("MMddyyyy")));
             rs = ps.executeQuery();
     
@@ -132,6 +131,42 @@ public class EventDatabase {
         return events;
     }    
 
+    public static Event getEventByID(int eventID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Event event = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(
+                "SELECT eventID, name, TIME(startTime) AS startTime, TIME(endTime) AS endTime, location, agenda, date, dateMonth " +
+                "FROM Events WHERE eventID = ?"
+            );
+            ps.setInt(1, eventID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                event = new Event(
+                    rs.getInt("eventID"),
+                    rs.getString("name"),
+                    rs.getTime("startTime"),  
+                    rs.getTime("endTime"),     
+                    rs.getString("location"),
+                    rs.getString("agenda"),
+                    rs.getString("date"),
+                    rs.getString("dateMonth")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+
+        return event;
+    } 
+
     public static void deleteEvent(int eventID) 
     {
         Connection conn = null;
@@ -154,7 +189,7 @@ public class EventDatabase {
         }
     }
 
-    public static int updateEvent(int eventID, String date, Timestamp startTime, Timestamp endTime, String location, String agenda) 
+    public static int updateEvent(int eventID, String name, String date, String dateMonth, Timestamp startTime, Timestamp endTime, String location, String agenda) 
     {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -164,13 +199,15 @@ public class EventDatabase {
         try 
         {
             conn = getConnection();
-            ps = conn.prepareStatement("UPDATE Events SET date = ?, startTime = ?, endTime = ?, location = ?, agenda = ? WHERE eventID = ?");
-            ps.setString(1, date);
-            ps.setTimestamp(2, startTime);
-            ps.setTimestamp(3, endTime);
-            ps.setString(4, location);
-            ps.setString(5, agenda);
-            ps.setInt(6, eventID);  
+            ps = conn.prepareStatement("UPDATE Events SET name = ?, date = ?, dateMonth = ?, startTime = ?, endTime = ?, location = ?, agenda = ? WHERE eventID = ?");
+            ps.setString(1, name);
+            ps.setString(2, date);
+            ps.setString(3, dateMonth);
+            ps.setTimestamp(4, startTime);
+            ps.setTimestamp(5, endTime);
+            ps.setString(6, location);
+            ps.setString(7, agenda);
+            ps.setInt(8, eventID);  
             // Updated to get number of affected rows
             rows = ps.executeUpdate();
         }

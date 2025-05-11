@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import "../styles/createEvent.css";
 
 function CreateEvent(){
@@ -6,8 +7,8 @@ function CreateEvent(){
     const [formData, setFormData] = useState({
         name: '',
         date: '',
-        start: '',
-        end: '',
+        startTime: '',
+        endTime: '',
         location: '',
         agenda: ''
     });
@@ -18,6 +19,7 @@ function CreateEvent(){
         e.preventDefault();
         let hasError = false;
         const errorsList = {};
+        console.log(formData.date);
         
         // Check name
         if (formData.name.trim() === "") {
@@ -32,14 +34,14 @@ function CreateEvent(){
         } 
 
         // Check start time
-        if (formData.start === "") {
-            errorsList.start = "Start time is required.";
+        if (formData.startTime === "") {
+            errorsList.startTime = "Start time is required.";
             hasError = true;
         } 
 
         // Check start time
-        if (formData.end === "") {
-            errorsList.end = "End time is required.";
+        if (formData.endTime === "") {
+            errorsList.endTime = "End time is required.";
             hasError = true;
         } 
 
@@ -49,13 +51,56 @@ function CreateEvent(){
         if (hasError) {
             return;
         }
+
+        handleSave(e);
     }
+
+    const formatForBackend = () => {
+        return {
+          ...formData,
+          date: formData.date, 
+          startTime: `${formData.startTime}:00`,
+          endTime: `${formData.endTime}:00`
+        };
+    };
+
+    const navigate = useNavigate()
+    
+    const handleSave = async (e) => {
+        e.preventDefault();
+        try {
+          const formatted = formatForBackend();
+          const URL = `http://localhost:8080/Team16_CSCI201_Project/AddEvent`;
+          const response = await fetch(URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              name: formatted.name,
+              date: formatted.date,
+              start: formatted.startTime,
+              end: formatted.endTime,
+              location: formatted.location,
+              agenda: formatted.agenda
+            }).toString()
+          });
+    
+          const result = await response.json();
+    
+          if(result.status === "success"){
+            alert('created');
+            navigate("/clubLeaderPage");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Failed to save changes.");
+        }
+    };
 
 
     return(
         <div id="event">
             <div>
-                <h1 class="titles"><strong>Create Event</strong></h1>
+                <h1 className="titles"><strong>Create Event</strong></h1>
                 <div> 
                     <form id="form" onSubmit={formSubmit}> 
                         <div id="form-card">
@@ -72,13 +117,13 @@ function CreateEvent(){
                             <div id="times">
                                 <div>
                                     <label>Start Time: </label><br/>
-                                    <input type="time" value={formData.start} onChange={(e) => setFormData({ ...formData, start: e.target.value })}/>
-                                    {errors.start && <div className="error-message">{errors.start}</div>}
+                                    <input type="time" value={formData.startTime} onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}/>
+                                    {errors.startTime && <div className="error-message">{errors.startTime}</div>}
                                 </div>
                                 <div>
                                     <label>End Time: </label><br/>
-                                    <input type="time" value={formData.end} onChange={(e) => setFormData({ ...formData, end: e.target.value })}/>
-                                    {errors.end && <div className="error-message">{errors.end}</div>}
+                                    <input type="time" value={formData.endTime} onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}/>
+                                    {errors.endTime && <div className="error-message">{errors.endTime}</div>}
                                 </div>
                             </div>
                             <div><label>Location:</label><br/><input type="text" placeholder="Location" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })}/></div>

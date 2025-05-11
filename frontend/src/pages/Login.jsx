@@ -108,9 +108,9 @@ const Login = () => {
       </div>
       
       <div className="guest-section">
-        <div className="guest-content">
+        {/* <div className="guest-content"> */}
           <ContinueAsGuest onContinue={handleContinueAsGuest} />
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );
