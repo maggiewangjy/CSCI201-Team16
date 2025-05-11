@@ -151,6 +151,29 @@ function EditEvent({ eventId, onClose }) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this event?")) return;
+
+    try {
+        const URL = `http://localhost:8080/Team16_CSCI201_Project/DeleteEvent`;
+        const response = await fetch(URL, { 
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `eventID=${encodeURIComponent(eventId)}` 
+        });
+        const result = await response.json();
+        
+        if (result.status === "success"){
+            navigate("/clubLeaderPage");
+        }
+        else{
+            setError("Failed to delete event.");
+        }
+    } catch (err) {
+        setError("Connection Error: Could not delete event.");
+    }
+};
+
   if (loading) return <p>Loading…</p>;
 
   return (
@@ -187,6 +210,7 @@ function EditEvent({ eventId, onClose }) {
                   </div>
                   <div id="buttons">
                       <button>Save Changes</button>
+                      <button onClick={handleDelete}>Delete Event</button>
                   </div>
               </form>
           </div>
