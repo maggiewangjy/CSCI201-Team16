@@ -12,7 +12,7 @@ const ContinueAsGuest = () => {
   return (
     <div className="guest-container">
       <h2 className="guest-title">
-        Continue as <br /> Member (Guest)
+        Continue as <br /> Guest
       </h2>
       <button className="guest-button" onClick={handleContinue}>
         Continue <span className="guest-arrow">➔</span>

@@ -27,7 +27,7 @@ const MemberSignUp = () => {
       formData.append("password", password);
       
       // Make POST request to the servlet
-      const response = await fetch("/Register", {
+      const response = await fetch("http://localhost:8080/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
