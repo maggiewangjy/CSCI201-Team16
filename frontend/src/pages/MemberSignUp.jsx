@@ -26,11 +26,9 @@ const MemberSignUp = () => {
       });
 
       const result = await response.json();
-      // console.log(result);
 
       if (result.status === "success") {
         setInvalidFormInput(false);
-        // console.log("register successful", result);
         localStorage.clear();
         navigate("/login");
       } else {

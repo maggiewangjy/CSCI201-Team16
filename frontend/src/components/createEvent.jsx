@@ -69,7 +69,13 @@ function CreateEvent(){
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-          const formatted = formatForBackend();
+            const formatted = formatForBackend();
+            // console.log(formatted.name);
+            // console.log(formatted.date);
+            // console.log(formatted.startTime);
+            // console.log(formatted.endTime);
+            // console.log(formatted.location);
+            // console.log(formatted.agenda);
           const URL = `http://localhost:8080/Team16_CSCI201_Project/AddEvent`;
           const response = await fetch(URL, {
             method: "POST",
@@ -90,12 +96,14 @@ function CreateEvent(){
             alert('created');
             navigate("/clubLeaderPage");
           }
+          else{
+            console.log('error:' + result.message);
+          }
         } catch (err) {
           console.error(err);
           alert("Failed to save changes.");
         }
     };
-
 
     return(
         <div id="event">

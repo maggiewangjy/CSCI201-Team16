@@ -16,9 +16,6 @@ const Login = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    // console.log(email);
-    // console.log(password);
-
     try {
       e.preventDefault;
       const response = await fetch("http://localhost:8080/Team16_CSCI201_Project/Login", {
