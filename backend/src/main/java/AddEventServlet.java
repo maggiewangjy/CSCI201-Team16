@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/AddEvent")
 public class AddEventServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final Calendar calendar = new Calendar();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -55,7 +54,7 @@ public class AddEventServlet extends HttpServlet {
             String dateMonth = date.format(DateTimeFormatter.ofPattern("MMyyyy"));
 
             Event event = new Event(0, name, startSqlTime, endSqlTime, location, agenda, dateFormatted, dateMonth);
-            calendar.addEvent(event);
+            EventDatabase.addEvent(event);
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("{\"status\":\"success\", \"message\":\"Event created.\"}");
