@@ -1,67 +1,52 @@
 import React, { useState } from "react";
 import ContinueAsGuest from "../components/continueAsGuest.jsx";
 import logo from "../images/logoBackGroundRemoved.png";
+import { useNavigate } from "react-router-dom";
 import "../styles/clubLeaderSignUp.css";
 
 const MemberSignUp = () => {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [invalidFormInput, setInvalidFormInput] = useState(false);
 
-  const handleSignUp = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
-    setLoading(true);
-    
-    // Get form values directly from the form
+
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
-    
+
     try {
-      // Create URL-encoded form data as expected by the servlet
-      const formData = new URLSearchParams();
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("password", password);
-      
-      // Make POST request to the servlet
-      const response = await fetch("/Register", {
+      e.preventDefault;
+      const response = await fetch("http://localhost:8080/Team16_CSCI201_Project/Register", {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
-        body: formData.toString(),
+        body: JSON.stringify({ name, email, password }),
       });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Registration successful
-        setSuccess(data.message || "Registration successful! You can now login.");
-        // Optional: Clear form
-        e.target.reset();
-        
-        // Optional: Redirect to login page after a delay
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 2000);
+
+      const result = await response.json();
+      // console.log(result);
+
+      if (result.status === "success") {
+        setInvalidFormInput(false);
+        // console.log("register successful", result);
+        localStorage.clear();
+        navigate("/login");
       } else {
-        // Registration failed
-        setError(data.message || "Registration failed. Please try again.");
+        setInvalidFormInput(true);
+        console.log(result.message);
       }
     } catch (err) {
-      console.error("Registration error:", err);
-      setError("An error occurred. Please try again later.");
+      setError("An error occurred");
     } finally {
-      setLoading(false);
     }
   };
 
   const handleContinueAsGuest = () => {
-    // Redirect to guest page
-    window.location.href = "/clubLeaderPage";
+    localStorage.clear();
+    localStorage.setItem("logged-in", "false")
+    navigate("/clubLeaderPage");
   };
 
   return (
@@ -70,47 +55,37 @@ const MemberSignUp = () => {
         <div className="logo-container">
           <img src={logo} alt="Club Logo" className="logo" />
         </div>
-        
+
         <div className="signup-form-card">
           <h2 className="signup-title">New Club Leader Registration</h2>
-          
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
-          
-          <form onSubmit={handleSignUp} className="signup-form">
-            <div className="form-group">
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                className="signup-input"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email Address"
-                className="signup-input"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                className="signup-input"
-                required
-              />
-            </div>
-            <button 
-              type="submit" 
-              className="signup-button" 
-              disabled={loading}
+          <form onSubmit={handleRegister} className="signup-form">
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              className="signup-input"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              className="signup-input"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="signup-input"
+              required
+            />
+            {invalidFormInput && <div className="error-message">Email already in Exist</div>}
+            <button
+              type="submit"
+              className="signup-button"
             >
-              {loading ? "Signing Up..." : "Sign Up"}
+              Register
             </button>
             <p className="login-link">
               Already have an account? <a href="/login">Login here</a>
@@ -118,7 +93,7 @@ const MemberSignUp = () => {
           </form>
         </div>
       </div>
-      
+
       <div className="guest-section">
         <div className="guest-content">
           <ContinueAsGuest onContinue={handleContinueAsGuest} />

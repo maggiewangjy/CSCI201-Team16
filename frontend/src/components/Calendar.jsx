@@ -77,7 +77,7 @@ function Calendar({ selectEventDate }) {
 
 	const manageSelectDate = (selectedDate) => {
 		selectEventDate(selectedDate);
-		console.log(selectedDate);
+		// console.log(selectedDate);
 		const activeDate = document.querySelector(".date.active");
 		if (activeDate !== null && activeDate.id !== null) {
 			document.getElementById(activeDate.id).classList.remove("active");
@@ -132,17 +132,17 @@ function Calendar({ selectEventDate }) {
 			allDates.push(<div id={mmddyyyy} key={mmddyyyy} className="date inactive">{dd}</div>);
 		}
 
-		console.log(activeDate);
+		// console.log(activeDate);
 		for (let i = 1; i <= lastDay.getDate(); i++) {
 			const date = new Date(currYear, currMonth, i);
 			const mm = String(date.getMonth() + 1).padStart(2, '0');
 			const dd = String(date.getDate()).padStart(2, '0');
 			const yyyy = date.getFullYear();
 			const mmddyyyy = `${mm}${dd}${yyyy}`;
-			console.log("===========");
-			console.log("activeDate: " + activeDate);
-			console.log("currDate: " + mmddyyyy);
-			console.log(activeDate === mmddyyyy);
+			// console.log("===========");
+			// console.log("activeDate: " + activeDate);
+			// console.log("currDate: " + mmddyyyy);
+			// console.log(activeDate === mmddyyyy);
 
 			const activeClass = activeDate === mmddyyyy ? "active" : "";
 			

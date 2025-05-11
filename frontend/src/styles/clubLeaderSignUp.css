@@ -37,7 +37,7 @@
   /* Guest section (right side) styling */
   .guest-section {
     flex: 1;
-    background-color: #932c24; /* Dark red background */
+    background-color: #A31D1D; /* Dark red background */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,4 +46,8 @@
   /* Center the guest content vertically */
   .guest-content {
     width: 100%;
+  }
+
+  .error-message{
+    color: var(--darkRed);
   }
