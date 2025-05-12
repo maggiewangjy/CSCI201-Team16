@@ -15,6 +15,16 @@ function CreateEvent(){
 
     const [errors, setErrors] = useState({});
 
+    const getCurrentDate = () => {
+        const currentDate = new Date();
+
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const year = currentDate.getFullYear();
+
+        return (`${year}-${month}-${day}`);
+    }
+
     function formSubmit(e) {
         e.preventDefault();
         let hasError = false;
@@ -70,38 +80,32 @@ function CreateEvent(){
         e.preventDefault();
         try {
             const formatted = formatForBackend();
-            // console.log(formatted.name);
-            // console.log(formatted.date);
-            // console.log(formatted.startTime);
-            // console.log(formatted.endTime);
-            // console.log(formatted.location);
-            // console.log(formatted.agenda);
-          const URL = `http://localhost:8080/Team16_CSCI201_Project/AddEvent`;
-          const response = await fetch(URL, {
+            const URL = `http://localhost:8080/Team16_CSCI201_Project/AddEvent`;
+            const response = await fetch(URL, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
-              name: formatted.name,
-              date: formatted.date,
-              start: formatted.startTime,
-              end: formatted.endTime,
-              location: formatted.location,
-              agenda: formatted.agenda
+            name: formatted.name,
+            date: formatted.date,
+            start: formatted.startTime,
+            end: formatted.endTime,
+            location: formatted.location,
+            agenda: formatted.agenda
             }).toString()
-          });
+        });
     
-          const result = await response.json();
+        const result = await response.json();
     
-          if(result.status === "success"){
+        if(result.status === "success"){
             alert('created');
             navigate("/clubLeaderPage");
-          }
-          else{
+        }
+        else{
             console.log('error:' + result.message);
-          }
+        }
         } catch (err) {
-          console.error(err);
-          alert("Failed to save changes.");
+        console.error(err);
+        alert("Failed to save changes.");
         }
     };
 
@@ -119,7 +123,7 @@ function CreateEvent(){
                             </div>
                             <div>
                                 <label>Date:</label><br/>
-                                <input type="date" placeholder="Date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })}/>
+                                <input type="date" placeholder="Date" value={formData.date} min={getCurrentDate()} onChange={(e) => setFormData({ ...formData, date: e.target.value })}/>
                                 {errors.date && <div className="error-message">{errors.date}</div>}
                             </div>
                             <div id="times">

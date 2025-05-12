@@ -154,6 +154,16 @@ function EditEvent({ eventId, onClose }) {
     }
   };
 
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const year = currentDate.getFullYear();
+
+    return (`${year}-${month}-${day}`);
+  }
+
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
 
@@ -194,7 +204,7 @@ function EditEvent({ eventId, onClose }) {
                       </div>
                       <div>
                           <label>Date:</label><br/>
-                          <input type="date" placeholder="Date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })}/>
+                          <input type="date" placeholder="Date" value={formData.date} min={getCurrentDate()} onChange={(e) => setFormData({ ...formData, date: e.target.value })}/>
                           {errors.date && <div className="error-message">{errors.date}</div>}
                       </div>
                       <div id="times">
