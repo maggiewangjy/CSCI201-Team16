@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
             User fetchedUser = UserDatabaseUtil.getUser(email, password);
             
             // userID found and successful login
-            if (user != null) {
+            if (fetchedUser != null) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 String json = String.format(
                     "{\"status\":\"success\", \"message\":\"Login successful.\", \"data\": {\"userID\": %d, \"name\": \"%s\", \"email\": \"%s\"}}",

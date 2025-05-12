@@ -24,7 +24,7 @@ public class UserDatabaseUtil {
     }
 
     public static void insertUser(String name, String email, String password) {
-        String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Users (name, email, password) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, name);
@@ -37,7 +37,7 @@ public class UserDatabaseUtil {
     }
 
     public static User getUser(String email, String password) {
-        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        String sql = "SELECT * FROM Users WHERE email = ? AND password = ?";
         try (Connection conn = getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
@@ -57,7 +57,7 @@ public class UserDatabaseUtil {
     }
     
     public static int getEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
+        String sql = "SELECT * FROM Users WHERE email = ?";
         try (Connection conn = getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);

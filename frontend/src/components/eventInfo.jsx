@@ -24,11 +24,6 @@ function EventInfo({ selectedDate, onEditEvent, onViewAttendance }) {
         }
     }, [currentIndex, events]);
 
-    // useEffect(() => {
-    //     const userID = localStorage.getItem("userID");
-    //     console.log("Current user ID:", userID);
-    // }, []);
-
     const fetchEvent = async () => {
         try {
             // Get event from backend 
@@ -266,7 +261,7 @@ function EventInfo({ selectedDate, onEditEvent, onViewAttendance }) {
                                 {isLoggedIn && (<button className="bottom-buttons" onClick={() => onEditEvent(events[currentIndex].eventID)}>Edit Event</button>)}
                                 {isLoggedIn && !attendees.includes(localStorage.getItem("name")) ? (
                                     <button className="bottom-buttons" onClick={addAttendee}>Attend</button>
-                                ) : (
+                                ) : isLoggedIn && (
                                     <button className="bottom-buttons" onClick={removeAttendee}>Unattend</button>
                                 )}
                             </div>
