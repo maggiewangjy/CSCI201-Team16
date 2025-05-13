@@ -3,7 +3,6 @@ import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import "./styles/app.css";
 import Login from "./pages/Login.jsx";
 import ClubLeaderPage from "./pages/clubLeaderPage.jsx"
-import UserVerification from "./components/UserVerification.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import MemberSignUp from "./pages/MemberSignUp.jsx"
 
@@ -16,9 +15,7 @@ function App() {
         <Route
           path="/clubLeaderPage"
           element={
-            // <UserVerification>
               <ClubLeaderPage />
-            // </UserVerification>
           }
         />
         <Route path="*" element={ <NotFound/> }/>
